@@ -2,18 +2,36 @@
 import { RouterLink, RouterView } from 'vue-router'
 import { tokenStore } from './stores/tokenStore';
 import router from './router';
+import Modal from './components/Modal.vue';
+import Login from './views/Login.vue';
 </script>
 
 <template>
   <header>
+    <div v-if="!loggedOut">
+        <h3>{{ username }}</h3>
+      </div>
+    <div class="navbar-container">
       <nav>
-        <RouterLink :to="{name: 'Home'}">Home</RouterLink>
-        <RouterLink :to="{name: 'Login'}" v-if="loggedOut">Login</RouterLink>
-        <RouterLink to="" @click="logOut" v-else>Log out</RouterLink>
+        <div class="navLinks">
+          <RouterLink :to="{name: 'Home'}">Home</RouterLink>
+          <RouterLink to="" @click="toggleModal" v-if="loggedOut">Log in</RouterLink>
+          <div v-else>
+            <RouterLink to="" @click="logOut">Log out</RouterLink>
+          </div>
+        </div>
+
       </nav>
+    </div>
+
   </header>
 
   <RouterView />
+
+  <Modal v-if="showModal" @closeModal="toggleModal">
+    <Login></Login>
+  </Modal>
+
 </template>
 
 
@@ -23,7 +41,9 @@ export default {
 
   data(){
     return {
-      loggedOut: true
+      loggedOut: true,
+      username: "",
+      showModal: false
     }
   },
   methods:{
@@ -31,11 +51,15 @@ export default {
       tokenStore().changeJWT("")
       tokenStore().changeUsername("")
       window.location.replace("http://localhost:5173/")
-    }
+    },
+    toggleModal(){
+      this.showModal = !this.showModal
+    },
   },
   mounted(){
     if(tokenStore().user.jwt){
       this.loggedOut = false
+      this.username = tokenStore().user.username
     }
   }
 
@@ -45,69 +69,90 @@ export default {
 
 <style scoped>
 
-header {
-  line-height: 1;
-  max-height: 50vh;
-  background-color: gray;
-  text-align: center;
-  
+.navbar-container {
+  display: flex;
+  justify-content: right;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  margin-right: 3rem;
+  position: relative;
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
+header {
+  background: linear-gradient(to right, #fdfbfb, #ebedee);
+  padding: 16px 1rem;
+  border-bottom: 1px solid #ddd;
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  display: flex;
+  border-radius: 1rem;
 }
 
 nav {
-  width: 100%;
-  font-size: 12px;
   display: flex;
-  margin-top: 2rem;
+  align-items: right;
   justify-content: right;
+  text-align: right;
 }
 
-nav a.router-link-exact-active {
-  color: var(--color-text);
+h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0;
+  padding: 8px 12px;
 }
 
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
+.navLinks {
+  display: flex;
+  gap: 20px;
+  align-items: center;
 }
 
 nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
+  text-decoration: none;
+  color: #34495e;
+  font-weight: 500;
+  font-size: 15px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
 }
 
-nav a:first-of-type {
-  border: 0;
+nav a:hover {
+  background-color: #4a90e2;
+  color: #fff;
 }
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
+nav a.router-link-exact-active {
+  color: #4a90e2;
+  font-weight: 600;
+}
 
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
+@media (max-width: 768px) {
+  .navbar-container {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
+    width: 100%;
+    margin-top: 10px;
+  }
 
-    padding: 1rem 0;
-    margin-top: 1rem;
+  .navLinks {
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+
+  h3 {
+    margin-bottom: 10px;
   }
 }
+
 </style>
