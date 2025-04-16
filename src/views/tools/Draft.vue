@@ -56,6 +56,10 @@ export default {
                     }
                 }).then(response => console.log(response.data))
 
+                var elements = document.querySelectorAll('.box')
+
+                elements.forEach(e => e.classList.remove('selected'))
+                this.selectedUser = null
             }
         },
         onFileChange(e){
