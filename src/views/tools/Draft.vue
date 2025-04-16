@@ -1,39 +1,91 @@
+<script setup>
+import axios from 'axios';
+import Row from '../../components/Row.vue'
+import { tokenStore } from '@/stores/tokenStore';
+import Box from '../../components/Box.vue'
+</script>
+
+
 <template>
 
     <h1>Draft</h1>
 
-    <div>
+    <div v-if="users.length">
         <form @submit.prevent="fileUpload">
             <input type="file" accept="video/*" capture @change="onFileChange($event)"/>
             <button>submit</button>
         </form>
-        
     </div>
+    <div v-else>
+
+    </div>
+
+    <Row style="scale: 0.5">
+        <div v-for="user in users" :key="user.id">
+            <Box @click="selectUser" :id="user.id">
+                <h1>
+                    {{ user.username }}
+                </h1>
+            </Box>
+        </div>
+    </Row>
 
 </template>
 
 <script>
-import { tokenStore } from '@/stores/tokenStore';
 
-
-export default{
+export default {
 
     data() {
         return {
-            video: null
+            users: [],
+            video: null,
+            selectedUser: null
         }
     },
     methods:{
-        fileUpload(){
-            console.log(this.video)
+        async fileUpload(){
+            if(this.video && this.selectedUser){
+
+                var formData = new FormData()
+                formData.append('file', this.video)
+
+                await axios.post('http://localhost:8080/video/' + this.selectedUser, formData, {
+                    headers:{
+                        'Content-Type': 'multipart/form-data',
+                        "Authorization": "Bearer " + tokenStore().user.jwt,
+                        'Access-Control-Allow-Origin': '*',
+                        'Access-Control-Allow-Methods': 'GET, PUT, POST, DELETE, OPTIONS'
+
+                    }
+                }).then(response => console.log(response.data))
+
+            }
         },
         onFileChange(e){
             this.video = e.target.files[0]
+        },
+        selectUser(e){
+            this.selectedUser = e.target.id
+            var elements = document.querySelectorAll('.box')
+
+            elements.forEach(e => e.classList.remove('selected'))
+            e.target.classList.add('selected')
+            
+
         }
     },  
 
     mounted(){
-
+        
+        if(tokenStore().user.admin){
+            axios.get('http://localhost:8080/user/', tokenStore().headers)
+            .then(response => {
+                this.users = response.data
+                this.users = this.users.filter(user => user.username !== 'admin');
+            })
+            .catch(error => console.log(error.response.data))
+        }
     }
 
 
@@ -42,7 +94,12 @@ export default{
 </script>
 
 
-<style>
+<style scoped>
+
+.selected{
+    background-color: blue;
+    color:white
+}
 
 
 
