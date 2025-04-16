@@ -1,29 +1,56 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import { tokenStore } from './stores/tokenStore';
+import router from './router';
 </script>
 
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
       <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
+        <RouterLink :to="{name: 'Home'}">Home</RouterLink>
+        <RouterLink :to="{name: 'Login'}" v-if="loggedOut">Login</RouterLink>
+        <RouterLink to="" @click="logOut" v-else>Log out</RouterLink>
       </nav>
-    </div>
   </header>
 
   <RouterView />
 </template>
 
+
+<script>
+
+export default {
+
+  data(){
+    return {
+      loggedOut: true
+    }
+  },
+  methods:{
+    logOut(){
+      tokenStore().changeJWT("")
+      tokenStore().changeUsername("")
+      window.location.replace("http://localhost:5173/")
+    }
+  },
+  mounted(){
+    if(tokenStore().user.jwt){
+      this.loggedOut = false
+    }
+  }
+
+}
+
+</script>
+
 <style scoped>
+
 header {
-  line-height: 1.5;
-  max-height: 100vh;
+  line-height: 1;
+  max-height: 50vh;
+  background-color: gray;
+  text-align: center;
+  
 }
 
 .logo {
@@ -34,8 +61,9 @@ header {
 nav {
   width: 100%;
   font-size: 12px;
-  text-align: center;
+  display: flex;
   margin-top: 2rem;
+  justify-content: right;
 }
 
 nav a.router-link-exact-active {
