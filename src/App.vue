@@ -4,6 +4,7 @@ import { tokenStore } from './stores/tokenStore';
 import router from './router';
 import Modal from './components/Modal.vue';
 import Login from './views/Login.vue';
+import SignUp from './views/SignUp.vue';
 </script>
 
 <template>
@@ -29,7 +30,8 @@ import Login from './views/Login.vue';
   <RouterView />
 
   <Modal v-if="showModal" @closeModal="toggleModal">
-    <Login></Login>
+    <Login @register="toggleRegister" v-if="!register"></Login>
+    <SignUp @login="toggleRegister" v-else></SignUp>
   </Modal>
 
 </template>
@@ -43,7 +45,9 @@ export default {
     return {
       loggedOut: true,
       username: "",
-      showModal: false
+      showModal: false,
+      register: false
+
     }
   },
   methods:{
@@ -53,8 +57,12 @@ export default {
       window.location.replace("http://localhost:5173/")
     },
     toggleModal(){
+      this.register = false
       this.showModal = !this.showModal
     },
+    toggleRegister(){
+      this.register = !this.register
+    }
   },
   mounted(){
     if(tokenStore().user.jwt){
@@ -89,7 +97,9 @@ header {
   top: 0;
   z-index: 1000;
   display: flex;
-  border-radius: 1rem;
+  border-radius: 5px;
+  width: 98%;
+  margin: 0 auto;
 }
 
 nav {
@@ -125,11 +135,10 @@ nav a {
 
 nav a:hover {
   background-color: #4a90e2;
-  color: #fff;
+  color: white;
 }
 
 nav a.router-link-exact-active {
-  color: #4a90e2;
   font-weight: 600;
 }
 

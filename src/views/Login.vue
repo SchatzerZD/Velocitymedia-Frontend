@@ -1,6 +1,6 @@
 <template>
 
-<h1>LOGIN</h1>
+<h1>Log In</h1>
 
 <form @submit.prevent="onSubmit">
 
@@ -12,10 +12,14 @@
     <input type="password" id="password" v-model="user.password"></input>
     <label for="password">Password</label>
 
-    <button>Submit</button>
+    <div id="bottom">
+        <p>Dont have an account? <span id="register" @click="register">Register here</span></p>
+        <button>Submit</button>
+    </div>
+    
 </form>
 
-<div v-if="error">{{ error }}</div>
+<div v-if="error" id="error">{{ error }}</div>
 
 </template>
 
@@ -50,6 +54,9 @@ export default {
             tokenStore().changeJWT(jwt)
             tokenStore().changeUsername(this.user.username)
             window.location.replace("http://localhost:5173/")
+        },
+        register(){
+            this.$emit("register")
         }
     }
 
@@ -112,12 +119,32 @@ input[type="password"]:focus {
 }
 
 
+#bottom{
+    position: absolute;
+    bottom: 0px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#bottom p{
+    color: black;
+}
+
+#register{
+    color: blue;
+    cursor: pointer;
+}
+
+#register:hover{
+    font-weight: bold;
+    transition-duration: 0.1s;
+}
+
 button{
     text-align: center;
     width: 10rem;
     height: 2rem;
-    position: absolute;
-    bottom: 0px;
     border-radius: 6px;
     transition: all 0.3s ease;
 }
@@ -127,6 +154,12 @@ button:hover{
     color: #fff;
     cursor: pointer;
 }
+
+#error{
+        color: red;
+        text-align: center;
+        font-weight: bold;
+    }
 
 
 </style>
