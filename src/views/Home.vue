@@ -1,27 +1,29 @@
-
+<script setup>
+import Row from '../components/Row.vue'
+import Box from '../components/Box.vue';
+import { tokenStore } from '@/stores/tokenStore';
+</script>
 
 <template>
 
 <h1>HOME PAGE</h1>
 
 
-<div class="row">
-    <div class="box">
-        
-    </div>
-    <div class="box">
-
-    </div>
-    <div class="box">
-
-    </div>
-</div>
-
+    <Row>
+        <Box>
+            <h2>test1</h2>
+        </Box>
+        <Box>
+            <h2>test2</h2>
+        </Box>
+        <Box>
+            <h2>test3</h2>
+        </Box>
+    </Row>
 
 </template>
 
 <script>
-import { tokenStore } from '@/stores/tokenStore';
 
 
 export default {
@@ -42,14 +44,12 @@ export default {
 
 <style scoped>
 
-.row{
-    display:flex
-}
 
 h1{
     text-align: center;
     margin: 0 auto;
     margin-top: 3rem;
+    margin-bottom: 16rem;
 }
 
 </style>
