@@ -11,8 +11,10 @@ export const tokenStore = defineStore("user", () => {
     })
 
     const headers = ref({
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer '
+        headers: {
+            'Content-Type': 'application/json',
+            "Authorization": "Bearer "
+        }
     })
 
 
@@ -46,7 +48,7 @@ export const tokenStore = defineStore("user", () => {
 
     const changeJWT = (jwt) => {
         user.value.jwt = jwt
-        headers.value.Authorization = 'Bearer ' + jwt
+        headers.value.headers.Authorization = 'Bearer ' + jwt
     }
 
     const changeUsername = (username) => {

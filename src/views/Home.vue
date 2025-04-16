@@ -44,7 +44,7 @@ export default {
     },
     mounted() {
         console.log(tokenStore().user.username)
-        console.log(tokenStore().headers.Authorization)
+        console.log(tokenStore().headers.headers.Authorization)
         console.log(tokenStore().user.admin)
 
         if(tokenStore().user.jwt){
