@@ -9,20 +9,19 @@ import { tokenStore } from '@/stores/tokenStore';
 
     <h1>Admin</h1>
 
-    <form @submit.prevent="fileUpload">
-        <input type="file" accept="video/mp4" capture @change="onFileChange($event)"/>
-        <button>submit</button>
-    </form>
+    <div v-if="!uploading">
+        <form @submit.prevent="fileUpload">
+            <input type="file" accept="video/mp4" capture @change="onFileChange($event)"/>
+            <select v-model="selectedUser">
+                <option v-for="user in users" :key="user.id" :value="user.id">{{ user.username }}</option>
+            </select>
+            <button>submit</button>
+        </form>
+    </div>
+    <div v-else>
+        <h3>Uploading...</h3>
+    </div>
 
-    <Row style="scale: 0.5">
-            <div v-for="user in users" :key="user.id">
-                <Box @click="selectUser" :id="user.id">
-                    <h1>
-                        {{ user.username }}
-                    </h1>
-                </Box>
-            </div>
-    </Row>
 
 </template>
 
@@ -33,11 +32,13 @@ export default {
         return {
             users: [],
             video: null,
-            selectedUser: null
+            selectedUser: null,
+            uploading: false
         }
     },
     methods:{
         async fileUpload(){
+            this.uploading = true
             if(this.video && this.selectedUser){
 
                 var formData = new FormData()
@@ -48,24 +49,12 @@ export default {
                         "Authorization": "Bearer " + tokenStore().user.jwt,
                     }
                 }).then(response => console.log(response.data))
-
-                var elements = document.querySelectorAll('.box')
-
-                elements.forEach(e => e.classList.remove('selected'))
                 this.selectedUser = null
+                this.uploading = false
             }
         },
         onFileChange(e){
             this.video = e.target.files[0]
-        },
-        selectUser(e){
-            this.selectedUser = e.target.id
-            var elements = document.querySelectorAll('.box')
-
-            elements.forEach(e => e.classList.remove('selected'))
-            e.target.classList.add('selected')
-            
-
         }
     },
     mounted(){
