@@ -52,11 +52,7 @@ export default {
 
                 await axios.post('http://localhost:8080/video/' + this.selectedUser, formData, {
                     headers:{
-                        'Content-Type': 'multipart/form-data',
                         "Authorization": "Bearer " + tokenStore().user.jwt,
-                        'Access-Control-Allow-Origin': '*',
-                        'Access-Control-Allow-Methods': 'GET, PUT, POST, DELETE, OPTIONS'
-
                     }
                 }).then(response => console.log(response.data))
 
