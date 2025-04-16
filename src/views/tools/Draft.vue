@@ -55,11 +55,5 @@ export default {
 }
 
 
-.selected{
-    background-color: blue;
-    color:white
-}
-
-
 
 </style>
