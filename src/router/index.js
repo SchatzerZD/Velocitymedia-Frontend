@@ -4,6 +4,8 @@ import NotFound from '@/views/NotFound.vue'
 import Draft from '@/views/tools/Draft.vue'
 import Log from '@/views/tools/Log.vue'
 import BTS from '@/views/tools/BTS.vue'
+import Admin from '@/views/tools/Admin.vue'
+import { tokenStore } from '@/stores/tokenStore'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -29,6 +31,11 @@ const router = createRouter({
       name: 'Draft',
       component: Draft
     },
+    {
+      path: '/admin',
+      name: 'Admin',
+      component: Admin
+    },
 
     {
       path: '/:catchAll(.*)',
@@ -37,5 +44,17 @@ const router = createRouter({
     }
   ],
 })
+
+router.beforeEach(async (to, from) => {
+  if (!tokenStore().user.jwt && to.name !== 'Home') {
+    return { name: 'Home' }
+  }
+
+  if(!tokenStore().user.admin && to.name === 'Admin'){
+    return { name: 'Home' }
+  }
+
+})
+
 
 export default router

@@ -16,10 +16,14 @@ import SignUp from './views/account/SignUp.vue';
         <div class="navLinks">
           <RouterLink :to="{name: 'Home'}">Home</RouterLink>
           <RouterLink to="" @click="toggleModal" v-if="loggedOut">Log in</RouterLink>
-          <div v-else class="navLinks">
+          <div v-else-if="!admin" class="navLinks">
             <RouterLink :to="{name: 'BTS'}">BTS</RouterLink>
             <RouterLink :to="{name: 'Log'}">Log</RouterLink>
             <RouterLink :to="{name: 'Draft'}">Draft</RouterLink>
+            <RouterLink to="" @click="logOut">Log out</RouterLink>
+          </div>
+          <div v-else class="navLinks">
+            <RouterLink :to="{name: 'Admin'}">Admin Tools</RouterLink>
             <RouterLink to="" @click="logOut">Log out</RouterLink>
           </div>
         </div>
@@ -48,7 +52,8 @@ export default {
       loggedOut: true,
       username: "",
       showModal: false,
-      register: false
+      register: false,
+      admin: false
 
     }
   },
@@ -70,6 +75,7 @@ export default {
     if(tokenStore().user.jwt){
       this.loggedOut = false
       this.username = tokenStore().user.username
+      this.admin = tokenStore().user.admin
     }
   }
 
