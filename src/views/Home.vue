@@ -9,16 +9,25 @@ import { tokenStore } from '@/stores/tokenStore';
 <h1>HOME PAGE</h1>
 
 
-    <Row>
-        <Box>
-            <h2>test1</h2>
-        </Box>
-        <Box>
-            <h2>test2</h2>
-        </Box>
-        <Box>
-            <h2>test3</h2>
-        </Box>
+    <Row v-if="loggedIn">
+        <RouterLink :to="{name: 'BTS'}">
+            <Box>
+                <h2>BTS</h2>
+            </Box>
+        </RouterLink>
+
+        <RouterLink :to="{name: 'Log'}">
+            <Box>
+                <h2>Log</h2>
+            </Box>
+        </RouterLink>
+
+        <RouterLink :to="{name: 'Draft'}">
+            <Box>
+                <h2>Draft</h2>
+            </Box>
+        </RouterLink>
+            
     </Row>
 
 </template>
@@ -30,12 +39,17 @@ export default {
 
     data() {
         return {
-            
+            loggedIn:false
         }
     },
     mounted() {
-        console.log(tokenStore().user.jwt)
         console.log(tokenStore().user.username)
+        console.log(tokenStore().headers.Authorization)
+        console.log(tokenStore().user.admin)
+
+        if(tokenStore().user.jwt){
+            this.loggedIn = true
+        }
     }
 
 }
@@ -43,7 +57,9 @@ export default {
 </script>
 
 <style scoped>
-
+a{
+    text-decoration: none;
+}
 
 h1{
     text-align: center;

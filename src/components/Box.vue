@@ -1,7 +1,7 @@
 <template>
 
     <div class="box">
-        <slot></slot>
+        <slot id="slot"></slot>
     </div>
 
 
@@ -27,6 +27,7 @@ export default {
     color: black;
     border-radius: 1rem;
     box-shadow: 10px 5px 5px black;
+    text-align: center;
 }
 
 .box:hover{
