@@ -5,6 +5,19 @@
 <h1>HOME PAGE</h1>
 
 
+<div class="row">
+    <div class="box">
+        
+    </div>
+    <div class="box">
+
+    </div>
+    <div class="box">
+
+    </div>
+</div>
+
+
 </template>
 
 <script>
@@ -26,3 +39,17 @@ export default {
 }
 
 </script>
+
+<style scoped>
+
+.row{
+    display:flex
+}
+
+h1{
+    text-align: center;
+    margin: 0 auto;
+    margin-top: 3rem;
+}
+
+</style>
