@@ -1,10 +1,9 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import { tokenStore } from './stores/tokenStore';
-import router from './router';
 import Modal from './components/Modal.vue';
-import Login from './views/Login.vue';
-import SignUp from './views/SignUp.vue';
+import Login from './views/account/Login.vue';
+import SignUp from './views/account/SignUp.vue';
 </script>
 
 <template>
@@ -17,7 +16,10 @@ import SignUp from './views/SignUp.vue';
         <div class="navLinks">
           <RouterLink :to="{name: 'Home'}">Home</RouterLink>
           <RouterLink to="" @click="toggleModal" v-if="loggedOut">Log in</RouterLink>
-          <div v-else>
+          <div v-else class="navLinks">
+            <RouterLink :to="{name: 'BTS'}">BTS</RouterLink>
+            <RouterLink :to="{name: 'Log'}">Log</RouterLink>
+            <RouterLink :to="{name: 'Draft'}">Draft</RouterLink>
             <RouterLink to="" @click="logOut">Log out</RouterLink>
           </div>
         </div>
