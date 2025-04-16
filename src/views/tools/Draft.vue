@@ -7,28 +7,34 @@ import Box from '../../components/Box.vue'
 
 
 <template>
+    <div class="container">
+        <h1>Draft</h1>
 
-    <h1>Draft</h1>
-
-    <div v-if="users.length">
-        <form @submit.prevent="fileUpload">
-            <input type="file" accept="video/*" capture @change="onFileChange($event)"/>
-            <button>submit</button>
-        </form>
-    </div>
-    <div v-else>
-
-    </div>
-
-    <Row style="scale: 0.5">
-        <div v-for="user in users" :key="user.id">
-            <Box @click="selectUser" :id="user.id">
-                <h1>
-                    {{ user.username }}
-                </h1>
-            </Box>
+        <div v-if="users.length">
+            <form @submit.prevent="fileUpload">
+                <input type="file" accept="video/mp4" capture @change="onFileChange($event)"/>
+                <button>submit</button>
+            </form>
         </div>
-    </Row>
+        <div v-else>    
+            
+            <video v-for="video in videos" :key="video.id" width="848" height="480" controls>
+                <source :src="'../../../media//videos/' + video.videoName" type="video/mp4"></source>
+            </video>
+
+        </div>
+
+        <Row style="scale: 0.5">
+            <div v-for="user in users" :key="user.id">
+                <Box @click="selectUser" :id="user.id">
+                    <h1>
+                        {{ user.username }}
+                    </h1>
+                </Box>
+            </div>
+        </Row>
+    </div>
+
 
 </template>
 
@@ -39,6 +45,7 @@ export default {
     data() {
         return {
             users: [],
+            videos: [],
             video: null,
             selectedUser: null
         }
@@ -80,11 +87,17 @@ export default {
         
         if(tokenStore().user.admin){
             axios.get('http://localhost:8080/user/', tokenStore().headers)
-            .then(response => {
+                .then(response => {
                 this.users = response.data
                 this.users = this.users.filter(user => user.username !== 'admin');
             })
             .catch(error => console.log(error.response.data))
+        }else{
+            axios.get('http://localhost:8080/video/', tokenStore().headers)
+                .then(response => {
+                    this.videos = response.data
+                })
+                .catch(error => console.log(error.response.data))
         }
     }
 
@@ -95,6 +108,13 @@ export default {
 
 
 <style scoped>
+
+.container{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
 
 .selected{
     background-color: blue;
