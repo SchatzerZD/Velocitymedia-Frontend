@@ -45,9 +45,12 @@ export default {
 }
 
 .black {
-    background-color: rgb(6, 6, 14);
-    border-bottom: solid white;
+    background: linear-gradient(135deg, #0d0d1a, #000000, #23234d);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #f5f5f5;
+    box-shadow: 0 0 18px rgba(0, 0, 0, 0.6);
 }
+
 
 .backdrop {
     top: 0;

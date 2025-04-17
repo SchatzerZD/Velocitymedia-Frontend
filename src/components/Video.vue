@@ -6,7 +6,8 @@
 
             <div class="under-video">
                 <p class="timestamp">{{ timestamp.toFixed(2) }}s</p>
-                <input type="text" placeholder="Add a comment..." class="comment-input" v-model="commentText" />
+                <input type="text" placeholder="Add a comment with the current timestamp..." class="comment-input"
+                    v-model="commentText" />
                 <button :class="{ 'active': commentText.length > 0 }" :disabled="commentText.length === 0"
                     class="comment-btn" @click="comment">Comment</button>
             </div>
