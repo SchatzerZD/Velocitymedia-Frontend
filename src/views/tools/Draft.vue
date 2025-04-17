@@ -28,15 +28,15 @@ import Video from '@/components/Video.vue'
 
 
     <Modal v-if="showModal" @closeModal="closeCurrentVideo" theme="black">
-        <Video :timestamp="currentTime" :videoId="selectedVideoId" @goToTimestamp="setVideoTimestamp">
-            <video width="960rem" height="540rem" controls @timeupdate="updateTime($event)" id="selectedVideo">
-                <source :src="'../../../media//videos/' + selectedVideoName" type="video/mp4">
-                </source>
-            </video>
-        </Video>
-
-
+        <div class="modal-video-wrapper">
+            <Video :timestamp="currentTime" :videoId="selectedVideoId" @goToTimestamp="setVideoTimestamp">
+                <video controls @timeupdate="updateTime($event)" id="selectedVideo">
+                    <source :src="'../../../media//videos/' + selectedVideoName" type="video/mp4" />
+                </video>
+            </Video>
+        </div>
     </Modal>
+
 
 
 </template>
@@ -98,7 +98,9 @@ export default {
 
 <style scoped>
 .container {
-    margin: 5rem;
+    padding: 3rem 1.5rem;
+    color: #f5f5f5;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .videos {
@@ -114,13 +116,14 @@ export default {
     display: flex;
     cursor: pointer;
     gap: 1.5rem;
-    transition: background-color 0.2s ease, box-shadow 0.3s ease;
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
     padding: 1rem;
-    border-radius: 12px;
+    border-radius: 16px;
     align-items: center;
-    background-color: rgba(255, 255, 255, 0.02);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    background-color: rgba(255, 255, 255, 0.03);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
     position: relative;
+    backdrop-filter: blur(4px);
 }
 
 .video-card::after {
@@ -132,16 +135,16 @@ export default {
     height: 70px;
     background: linear-gradient(135deg, #5b86e5, #36d1dc);
     clip-path: polygon(100% 0, 0% 100%, 100% 100%);
-    border-bottom-right-radius: 12px;
+    border-bottom-right-radius: 16px;
     box-shadow: 0 0 10px rgba(86, 204, 242, 0.4);
 }
 
 .video-card:hover {
-    background-color: rgba(255, 255, 255, 0.397);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+    transform: scale(1.02);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+    background-color: rgba(255, 255, 255, 0.06);
     color: white;
 }
-
 
 .thumbnail {
     width: 352px;
@@ -149,18 +152,36 @@ export default {
     object-fit: cover;
     border-radius: 12px;
     transition: transform 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 .video-info {
     flex: 1;
     display: flex;
     flex-direction: column;
-
 }
 
 .video-title {
-    font-size: 1.2rem;
+    font-size: 1.25rem;
     font-weight: 600;
-    margin-bottom: 0.5rem;
+    color: #8ec5fc;
+}
+
+.modal-video-wrapper {
+    width: 75vw;
+    height: 70vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 16px;
+    overflow: hidden;
+    margin: 0 auto;
+}
+
+.modal-video-wrapper video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 12px;
 }
 </style>
