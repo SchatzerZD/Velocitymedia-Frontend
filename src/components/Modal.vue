@@ -1,7 +1,7 @@
 <template>
 
 <div class="backdrop">
-    <div class="modal">
+    <div class="modal" :class="{ black: theme === 'black'}">
         <div id="top">
             <span id="closeButton" @click="closeModal">X</span>
         </div>
@@ -17,6 +17,12 @@
 
 export default {
 
+    props:['theme'],
+    data(){
+        return{
+
+        }
+    },
     methods:{
         closeModal(){
             this.$emit('closeModal')
@@ -31,12 +37,16 @@ export default {
 <style scoped>
 
 .modal {
-    width: 25rem;
-    padding: 20px;
+    padding: 5rem;
+    max-width: 93%;
     margin: 5rem auto;
     background: white;
     border-radius: 10px;
+    display: inline-block;
+}
 
+.black{
+    background-color: rgb(24, 22, 22);
 }
 
 .backdrop {
@@ -46,6 +56,9 @@ export default {
     width: 100%;
     height: 100%;
     z-index: 1003;
+    align-items: center;
+    justify-content: center;
+    display: flex;
 }
 
 #top{
