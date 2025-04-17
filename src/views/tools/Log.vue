@@ -1,6 +1,7 @@
 <script setup>
 import { tokenStore } from '@/stores/tokenStore';
 import axios from 'axios';
+import Modal from '@/components/Modal.vue';
 </script>
 
 <template>
@@ -19,6 +20,19 @@ import axios from 'axios';
             </div>
         </div>
     </div>
+
+    <Modal v-if="showModal" @closeModal="toggleModal" theme="black">
+        <div class="log-modal-content">
+            <h3>{{ formatDate(selectedLog.logCreatedDate) }}</h3>
+            <div class="log-scroll">
+                <p>{{ selectedLog.log }}</p>
+            </div>
+        </div>
+    </Modal>
+
+
+
+
 </template>
 
 <script>
@@ -27,6 +41,8 @@ export default {
         return {
             logs: [],
             loading: false,
+            showModal: false,
+            selectedLog: null
         };
     },
     methods: {
@@ -39,8 +55,12 @@ export default {
             });
         },
         selectLog(log) {
-            console.log('Selected log:', log);
+            this.selectedLog = log
+            this.toggleModal()
         },
+        toggleModal() {
+            this.showModal = !this.showModal
+        }
     },
     async mounted() {
         this.loading = true;
@@ -116,5 +136,34 @@ h1 {
     font-size: 0.85rem;
     color: #74c0fc;
     text-align: right;
+}
+
+.log-modal-content {
+    max-width: 700px;
+    width: 100%;
+    max-height: 70vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+}
+
+.log-modal-content h3 {
+    font-size: 1.3rem;
+    color: #8ec5fc;
+    margin-bottom: 1rem;
+}
+
+.log-scroll {
+    overflow-y: auto;
+    padding-right: 0.5rem;
+    flex-grow: 1;
+}
+
+.log-scroll p {
+    line-height: 1.6;
+    font-size: 1rem;
+    color: #e0e0e0;
+    white-space: pre-wrap;
 }
 </style>
