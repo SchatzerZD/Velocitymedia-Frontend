@@ -22,8 +22,8 @@ import Video from '@/components/Video.vue'
 
 
     <Modal v-if="showModal" @closeModal="closeCurrentVideo" theme="black">
-        <Video :timestamp="currentTime" :videoId="selectedVideoId">
-            <video width="960rem" height="540rem" controls @timeupdate="updateTime($event)">
+        <Video :timestamp="currentTime" :videoId="selectedVideoId" @goToTimestamp="setVideoTimestamp">
+            <video width="960rem" height="540rem" controls @timeupdate="updateTime($event)" id="selectedVideo">
                 <source :src="'../../../media//videos/' + selectedVideoName" type="video/mp4">
                 </source>
             </video>
@@ -66,6 +66,10 @@ export default {
             this.selectedVideoId = null
             this.selectedVideoName = ''
             this.currentTime = 0
+        },
+        setVideoTimestamp(timestamp) {
+            var videoElement = document.querySelector('#selectedVideo')
+            videoElement.currentTime = timestamp
         }
     },
 

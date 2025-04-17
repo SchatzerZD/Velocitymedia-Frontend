@@ -14,7 +14,8 @@
         </div>
         <div class="comments">
             <ul class="comment-list">
-                <li class="comment-item" v-for="comment in comments" :key="comment.id">
+                <li class="comment-item" v-for="comment in comments" :key="comment.id"
+                    @click="goToTimestamp(comment.timestampInSeconds)">
                     <div class="comment-body">
                         <span class="username">{{ comment.timestampInSeconds }}</span>
                         <p class="comment-text">{{ comment.comment }}</p>
@@ -46,8 +47,8 @@ export default {
     methods: {
         comment() {
             this.comments.push({
-                timestamp: this.timestamp,
-                text: this.commentText
+                comment: this.commentText,
+                timestampInSeconds: this.timestamp
             })
 
             var comment = {
@@ -58,6 +59,9 @@ export default {
             axios.post('http://localhost:8080/video/' + this.videoId + '/comment', comment, tokenStore().headers)
                 .then(response => console.log(response))
                 .catch(error => console.log(error))
+        },
+        goToTimestamp(timestamp) {
+            this.$emit('goToTimestamp', timestamp)
         }
     },
     mounted() {
@@ -134,15 +138,23 @@ export default {
     display: flex;
     flex-direction: column;
     gap: 6px;
-    padding: 12px 0;
+    padding: 12px;
     border-bottom: 1px solid #e5e5e5;
     margin-bottom: 2rem;
+    border-radius: 5px;
 }
 
 
 
 .comment-body {
     flex: 1;
+    border-radius: 10px;
+}
+
+.comment-body:hover {
+    transition: box-shadow 0.2s ease;
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+    cursor: pointer;
 }
 
 .comment-text {
