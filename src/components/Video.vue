@@ -202,5 +202,6 @@ export default {
 
 .timestamp {
     color: #aaa;
+    min-width: 5rem;
 }
 </style>
