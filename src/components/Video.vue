@@ -88,7 +88,10 @@ export default {
 
 .comments {
     max-width: 400px;
-    width: 100%;
+    max-height: 56vh;
+    overflow-y: auto;
+    padding-right: 8px;
+    scrollbar-gutter: stable;
 }
 
 
@@ -148,7 +151,7 @@ export default {
     line-height: 1.4;
     word-wrap: break-word;
     white-space: normal;
-    min-width: 100vw;
+    min-width: 20vw;
 }
 
 .comment-btn {
