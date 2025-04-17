@@ -2,6 +2,7 @@
 import { tokenStore } from '@/stores/tokenStore';
 import axios from 'axios';
 import Modal from '@/components/Modal.vue';
+import Sidebar from '@/components/Sidebar.vue'
 </script>
 
 <template>
@@ -20,6 +21,19 @@ import Modal from '@/components/Modal.vue';
             </div>
         </div>
     </div>
+
+
+    <Sidebar :visible="showModal">
+        <div v-for="[date, logsByDate] in groupedLogs" :key="date" class="sidebar-date-section">
+            <h4 class="sidebar-date-title">{{ date }}</h4>
+            <div v-for="log in logsByDate" :key="log.id" class="sidebar-log-preview"
+                :class="{ active: selectedLog && selectedLog.id === log.id }" @click="selectLog(log)">
+                <p>{{ log.log }}</p>
+            </div>
+        </div>
+    </Sidebar>
+
+
 
     <Modal v-if="showModal" @closeModal="toggleModal" theme="black">
         <div class="log-modal-content">
@@ -45,6 +59,20 @@ export default {
             selectedLog: null
         };
     },
+    computed: {
+        groupedLogs() {
+            const groups = {};
+            this.logs.forEach(log => {
+                const dateStr = this.formatDate(log.logCreatedDate);
+                if (!groups[dateStr]) groups[dateStr] = [];
+                groups[dateStr].push(log);
+            });
+
+
+            return Object.entries(groups).sort((a, b) => new Date(b[0]) - new Date(a[0]));
+        }
+    },
+
     methods: {
         formatDate(timestamp) {
             const date = new Date(timestamp);
@@ -56,7 +84,7 @@ export default {
         },
         selectLog(log) {
             this.selectedLog = log
-            this.toggleModal()
+            this.showModal = true
         },
         toggleModal() {
             this.showModal = !this.showModal
@@ -141,12 +169,15 @@ h1 {
 .log-modal-content {
     max-width: 700px;
     width: 100%;
-    max-height: 70vh;
+    height: 58vh;
     overflow: hidden;
     display: flex;
     flex-direction: column;
     margin: 0 auto;
+    padding: 1.5rem;
+    border-radius: 12px;
 }
+
 
 .log-modal-content h3 {
     font-size: 1.3rem;
@@ -156,14 +187,72 @@ h1 {
 
 .log-scroll {
     overflow-y: auto;
-    padding-right: 0.5rem;
     flex-grow: 1;
+    padding-right: 0.5rem;
+    margin-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 1rem;
 }
+
+.log-scroll::-webkit-scrollbar {
+    width: 6px;
+}
+
+.log-scroll::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+}
+
+@media (max-width: 768px) {
+    .log-modal-content {
+        height: 80vh;
+        padding: 1rem;
+    }
+}
+
+
 
 .log-scroll p {
     line-height: 1.6;
     font-size: 1rem;
     color: #e0e0e0;
     white-space: pre-wrap;
+}
+
+.sidebar-log-preview {
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: background 0.2s ease;
+    cursor: pointer;
+    color: #bfc9ff;
+}
+
+.sidebar-log-preview:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-log-preview p {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.sidebar-log-preview.active {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.sidebar-date-section {
+    margin-bottom: 1rem;
+    padding: 0 1rem;
+}
+
+.sidebar-date-title {
+    color: #a5b4fc;
+    font-size: 0.95rem;
+    margin-bottom: 0.3rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 0.25rem;
 }
 </style>
