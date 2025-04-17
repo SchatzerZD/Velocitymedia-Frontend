@@ -15,12 +15,17 @@ import Video from '@/components/Video.vue'
     <div v-else class="container">
         <h1>Draft</h1>
         <div class="videos">
-            <img v-for="video in videos" :key="video.id" width="352rem" height="196rem"
-                @click="selectVideo(video.id, video.videoName)"
-                :src="'../../../media//videos/' + video.videoName.replace(/\.[^/.]+$/, '.jpg')">
-            </img>
+            <div class="video-card" v-for="video in videos" :key="video.id"
+                @click="selectVideo(video.id, video.videoName)">
+                <img class="thumbnail" :src="'../../../media//videos/' + video.videoName.replace(/\.[^/.]+$/, '.jpg')"
+                    alt="Video thumbnail" />
+                <div class="video-info">
+                    <h3 class="video-title">{{ video.videoName }}</h3>
+                </div>
+            </div>
         </div>
     </div>
+
 
 
     <Modal v-if="showModal" @closeModal="closeCurrentVideo" theme="black">
@@ -96,18 +101,49 @@ export default {
 .videos {
     display: flex;
     flex-direction: column;
-    gap: 5rem;
+    gap: 2rem;
+    width: 100%;
+    max-width: 960px;
+    margin: 0 auto;
 }
 
-.videos video:hover {
-    scale: 1.1;
-    transition-duration: 0.3s;
-    cursor: pointer;
-}
-
-.container {
+.video-card {
     display: flex;
+    cursor: pointer;
+    gap: 1.5rem;
+    transition: background-color 0.2s ease;
+    padding: 1rem;
+    border-radius: 12px;
     align-items: center;
+}
+
+.video-card:hover {
+    background-color: #f0f0f0;
+    color: black;
+}
+
+.thumbnail {
+    width: 352px;
+    height: 196px;
+    object-fit: cover;
+    border-radius: 12px;
+    transition: transform 0.3s ease;
+}
+
+.thumbnail:hover {
+    transform: scale(1.05);
+}
+
+.video-info {
+    flex: 1;
+    display: flex;
     flex-direction: column;
+
+}
+
+.video-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
 }
 </style>

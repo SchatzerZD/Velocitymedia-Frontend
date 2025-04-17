@@ -1,30 +1,30 @@
 <template>
 
-<div class="backdrop">
-    <div class="modal" :class="{ black: theme === 'black'}">
-        <div id="top">
-            <span id="closeButton" @click="closeModal">X</span>
-        </div>
+    <div class="backdrop">
+        <div class="modal" :class="{ black: theme === 'black' }">
+            <div id="top">
+                <span id="closeButton" @click="closeModal">X</span>
+            </div>
 
-        <slot></slot>
+            <slot></slot>
+        </div>
     </div>
-</div>
-    
-    
+
+
 </template>
 
 <script>
 
 export default {
 
-    props:['theme'],
-    data(){
-        return{
+    props: ['theme'],
+    data() {
+        return {
 
         }
     },
-    methods:{
-        closeModal(){
+    methods: {
+        closeModal() {
             this.$emit('closeModal')
         }
     }
@@ -35,7 +35,6 @@ export default {
 
 
 <style scoped>
-
 .modal {
     padding: 5rem;
     max-width: 93%;
@@ -45,8 +44,9 @@ export default {
     display: inline-block;
 }
 
-.black{
-    background-color: rgb(24, 22, 22);
+.black {
+    background-color: rgb(6, 6, 14);
+    border-bottom: solid white;
 }
 
 .backdrop {
@@ -61,17 +61,15 @@ export default {
     display: flex;
 }
 
-#top{
+#top {
     text-align: right;
     font-size: 30px;
     font-weight: bold;
     color: gray;
 }
 
-#closeButton:hover{
+#closeButton:hover {
     cursor: pointer;
     color: red;
 }
-
-
 </style>
