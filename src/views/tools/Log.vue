@@ -13,7 +13,7 @@ import axios from 'axios';
 
         <div v-else class="log-grid">
             <div v-for="log in logs" :key="log.id" class="log-card" @click="selectLog(log)">
-                <h3>{{ formatDate(log.createdAt) }}</h3>
+                <h3>{{ formatDate(log.logCreatedDate) }}</h3>
                 <p>{{ log.log.length > 200 ? log.log.slice(0, 200) + '...' : log.log }}</p>
                 <span class="read-more">Click to read more</span>
             </div>
