@@ -1,7 +1,7 @@
 <script setup>
-import Row from '@/components/Row.vue'
 import { tokenStore } from '@/stores/tokenStore';
 import axios from 'axios';
+import Modal from '@/components/Modal.vue';
 </script>
 
 <template>
@@ -13,13 +13,27 @@ import axios from 'axios';
         <div v-else>
             <h1 class="page-title">Behind the Scenes</h1>
             <div class="image-grid">
-                <div v-for="image in images" :key="image.id" class="image-tile" @click="handleImageClick(image)">
+                <div v-for="image in images" :key="image.id" class="image-tile" @click="selectImage(image)">
                     <img :src="'../../../media/images/' + getImageName(image.imagePath)"
                         :alt="getImageName(image.imagePath)" />
                 </div>
             </div>
         </div>
     </div>
+
+
+    <Modal v-if="showModal" @closeModal="toggleModal" theme="black">
+        <div class="modal-image-container">
+            <button class="nav-arrow left" @click.stop="showPrevImage">&#10094;</button>
+            <img :src="'../../../media/images/' + getImageName(selectedImage.imagePath)"
+                :alt="getImageName(selectedImage.imagePath)" />
+            <button class="nav-arrow right" @click.stop="showNextImage">&#10095;</button>
+        </div>
+    </Modal>
+
+
+
+
 </template>
 
 
@@ -31,7 +45,9 @@ export default {
     data() {
         return {
             images: [],
-            loading: false
+            loading: false,
+            showModal: false,
+            selectedImage: null
         }
     },
     methods: {
@@ -39,7 +55,27 @@ export default {
             var stringArray = filePath.split("\\")
             var imageName = stringArray[stringArray.length - 1]
             return imageName
+        },
+        selectImage(image) {
+            this.selectedImage = image
+            this.toggleModal()
+        },
+        toggleModal() {
+            this.showModal = !this.showModal
+        },
+        showNextImage() {
+            const currentIndex = this.images.findIndex(img => img.id === this.selectedImage.id);
+            if (currentIndex < this.images.length - 1) {
+                this.selectedImage = this.images[currentIndex + 1];
+            }
+        },
+        showPrevImage() {
+            const currentIndex = this.images.findIndex(img => img.id === this.selectedImage.id);
+            if (currentIndex > 0) {
+                this.selectedImage = this.images[currentIndex - 1];
+            }
         }
+
     },
     async mounted() {
         this.loading = true
@@ -107,5 +143,70 @@ export default {
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+.modal-image-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-height: 80vh;
+    padding: 1rem;
+}
+
+.modal-image-wrapper img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+}
+
+.modal-image-container {
+    width: 65vw;
+    height: 70vh;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #1a1a2e;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+    margin: 0 auto;
+}
+
+
+.modal-image-container img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 12px;
+}
+
+.nav-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.08);
+    border: none;
+    font-size: 2rem;
+    color: #ffffff;
+    padding: 0.5rem 1rem;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10;
+    transition: background 0.2s ease;
+}
+
+.nav-arrow:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.nav-arrow.left {
+    left: 1rem;
+}
+
+.nav-arrow.right {
+    right: 1rem;
 }
 </style>
