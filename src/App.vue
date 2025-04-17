@@ -13,16 +13,16 @@ import SignUp from './views/account/SignUp.vue';
     </div>
     <div class="navbar-container">
       <nav>
-        <div class="navLinks">
+        <div class="nav-links">
           <RouterLink :to="{ name: 'Home' }">Home</RouterLink>
           <RouterLink to="" @click="toggleModal" v-if="loggedOut">Log in</RouterLink>
-          <div v-else-if="!admin" class="navLinks">
+          <div v-else-if="!admin" class="nav-links">
             <RouterLink :to="{ name: 'BTS' }">BTS</RouterLink>
             <RouterLink :to="{ name: 'Log' }">Log</RouterLink>
             <RouterLink :to="{ name: 'Draft' }">Draft</RouterLink>
             <RouterLink to="" @click="logOut">Log out</RouterLink>
           </div>
-          <div v-else class="navLinks">
+          <div v-else class="nav-links">
             <RouterLink :to="{ name: 'Admin' }">Admin Tools</RouterLink>
             <RouterLink to="" @click="logOut">Log out</RouterLink>
           </div>
@@ -129,7 +129,7 @@ h3 {
   padding: 8px 12px;
 }
 
-.navLinks {
+.nav-links {
   display: flex;
   gap: 20px;
   align-items: center;
