@@ -14,10 +14,10 @@
         </div>
         <div class="comments">
             <ul class="comment-list">
-                <li class="comment-item" v-for="comment in comments" :key="comment + timestamp">
+                <li class="comment-item" v-for="comment in comments" :key="comment.id">
                     <div class="comment-body">
-                        <span class="username">{{ comment.timestamp }}</span>
-                        <p class="comment-text">{{ comment.text }}</p>
+                        <span class="username">{{ comment.timestampInSeconds }}</span>
+                        <p class="comment-text">{{ comment.comment }}</p>
                     </div>
                 </li>
             </ul>
@@ -30,10 +30,13 @@
 
 
 <script>
+import { tokenStore } from '@/stores/tokenStore';
+import axios from 'axios';
+
 
 export default {
 
-    props: ['timestamp'],
+    props: ['timestamp', 'videoId'],
     data() {
         return {
             commentText: '',
@@ -46,7 +49,23 @@ export default {
                 timestamp: this.timestamp,
                 text: this.commentText
             })
+
+            var comment = {
+                comment: this.commentText,
+                timestampInSeconds: this.timestamp
+            }
+
+            axios.post('http://localhost:8080/video/' + this.videoId + '/comment', comment, tokenStore().headers)
+                .then(response => console.log(response))
+                .catch(error => console.log(error))
         }
+    },
+    mounted() {
+        axios.get('http://localhost:8080/video/' + this.videoId + '/comment', tokenStore().headers)
+            .then(response => {
+                this.comments = response.data
+            })
+            .catch(error => console.log(error))
     }
 
 }
@@ -129,6 +148,7 @@ export default {
     line-height: 1.4;
     word-wrap: break-word;
     white-space: normal;
+    min-width: 100vw;
 }
 
 .comment-btn {

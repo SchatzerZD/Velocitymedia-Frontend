@@ -22,7 +22,7 @@ import Video from '@/components/Video.vue'
 
 
     <Modal v-if="showModal" @closeModal="closeCurrentVideo" theme="black">
-        <Video :timestamp="currentTime">
+        <Video :timestamp="currentTime" :videoId="selectedVideoId">
             <video width="960rem" height="540rem" controls @timeupdate="updateTime($event)">
                 <source :src="'../../../media//videos/' + selectedVideoName" type="video/mp4">
                 </source>
