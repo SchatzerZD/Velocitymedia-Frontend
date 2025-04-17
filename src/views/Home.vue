@@ -6,28 +6,27 @@ import { tokenStore } from '@/stores/tokenStore';
 
 <template>
 
-<h1>HOME PAGE</h1>
-
+    <h1>HOME PAGE</h1>
 
     <Row v-if="loggedIn">
-        <RouterLink :to="{name: 'BTS'}">
+        <RouterLink :to="{ name: 'BTS' }">
             <Box>
                 <h2>BTS</h2>
             </Box>
         </RouterLink>
 
-        <RouterLink :to="{name: 'Log'}">
+        <RouterLink :to="{ name: 'Log' }">
             <Box>
                 <h2>Log</h2>
             </Box>
         </RouterLink>
 
-        <RouterLink :to="{name: 'Draft'}">
+        <RouterLink :to="{ name: 'Draft' }">
             <Box>
                 <h2>Draft</h2>
             </Box>
         </RouterLink>
-            
+
     </Row>
 
 </template>
@@ -39,11 +38,11 @@ export default {
 
     data() {
         return {
-            loggedIn:false
+            loggedIn: false
         }
     },
     mounted() {
-        if(tokenStore().user.jwt){
+        if (tokenStore().user.jwt) {
             this.loggedIn = true
         }
     }
@@ -53,15 +52,14 @@ export default {
 </script>
 
 <style scoped>
-a{
+a {
     text-decoration: none;
 }
 
-h1{
+h1 {
     text-align: center;
     margin: 0 auto;
     margin-top: 3rem;
-    margin-bottom: 16rem;
+    margin-bottom: 11rem;
 }
-
 </style>

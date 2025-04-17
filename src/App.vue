@@ -9,21 +9,21 @@ import SignUp from './views/account/SignUp.vue';
 <template>
   <header>
     <div v-if="!loggedOut">
-        <h3>{{ username }}</h3>
-      </div>
+      <h3>{{ username }}</h3>
+    </div>
     <div class="navbar-container">
       <nav>
         <div class="navLinks">
-          <RouterLink :to="{name: 'Home'}">Home</RouterLink>
+          <RouterLink :to="{ name: 'Home' }">Home</RouterLink>
           <RouterLink to="" @click="toggleModal" v-if="loggedOut">Log in</RouterLink>
           <div v-else-if="!admin" class="navLinks">
-            <RouterLink :to="{name: 'BTS'}">BTS</RouterLink>
-            <RouterLink :to="{name: 'Log'}">Log</RouterLink>
-            <RouterLink :to="{name: 'Draft'}">Draft</RouterLink>
+            <RouterLink :to="{ name: 'BTS' }">BTS</RouterLink>
+            <RouterLink :to="{ name: 'Log' }">Log</RouterLink>
+            <RouterLink :to="{ name: 'Draft' }">Draft</RouterLink>
             <RouterLink to="" @click="logOut">Log out</RouterLink>
           </div>
           <div v-else class="navLinks">
-            <RouterLink :to="{name: 'Admin'}">Admin Tools</RouterLink>
+            <RouterLink :to="{ name: 'Admin' }">Admin Tools</RouterLink>
             <RouterLink to="" @click="logOut">Log out</RouterLink>
           </div>
         </div>
@@ -47,7 +47,7 @@ import SignUp from './views/account/SignUp.vue';
 
 export default {
 
-  data(){
+  data() {
     return {
       loggedOut: true,
       username: "",
@@ -57,22 +57,22 @@ export default {
 
     }
   },
-  methods:{
-    logOut(){
+  methods: {
+    logOut() {
       tokenStore().changeJWT("")
       tokenStore().changeUsername("")
       window.location.replace("http://localhost:5173/")
     },
-    toggleModal(){
+    toggleModal() {
       this.register = false
       this.showModal = !this.showModal
     },
-    toggleRegister(){
+    toggleRegister() {
       this.register = !this.register
     }
   },
-  mounted(){
-    if(tokenStore().user.jwt){
+  mounted() {
+    if (tokenStore().user.jwt) {
       this.loggedOut = false
       this.username = tokenStore().user.username
       this.admin = tokenStore().user.admin
@@ -84,10 +84,9 @@ export default {
 </script>
 
 <style scoped>
-
 .navbar-container {
   display: flex;
-  justify-content: right;
+  justify-content: flex-end;
   align-items: center;
   max-width: 1200px;
   margin: 0 auto;
@@ -96,32 +95,37 @@ export default {
 }
 
 header {
-  background: linear-gradient(to right, #fdfbfb, #ebedee);
-  padding: 16px 1rem;
-  border-bottom: 1px solid #ddd;
+  background: linear-gradient(135deg, #343450, #1a1a2e, #23234d);
+  padding: 16px 1.5rem;
+  border-bottom: 1px solid rgb(255, 255, 255);
   font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
   position: sticky;
   top: 0;
   z-index: 1000;
   display: flex;
-  border-radius: 5px;
-  width: 98%;
-  margin: 0 auto;
+  flex-wrap: wrap;
+  border-radius: 12px;
+  width: 96%;
+  margin: 1rem auto;
+  backdrop-filter: blur(8px);
+  background-clip: padding-box;
+  color: #f5f5f5;
 }
 
 nav {
   display: flex;
-  align-items: right;
-  justify-content: right;
+  align-items: center;
+  justify-content: flex-end;
   text-align: right;
+  flex-grow: 1;
 }
 
 h3 {
-  font-size: 18px;
+  font-size: 25px;
   font-weight: 600;
-  color: #2c3e50;
-  margin: 0;
+  color: #f5f5f5;
+  margin: 0 1rem 0 0;
   padding: 8px 12px;
 }
 
@@ -133,21 +137,26 @@ h3 {
 
 nav a {
   text-decoration: none;
-  color: #34495e;
+  color: #bfc9ff;
   font-weight: 500;
   font-size: 15px;
-  padding: 8px 12px;
-  border-radius: 6px;
+  padding: 8px 16px;
+  border-radius: 8px;
   transition: all 0.3s ease;
+  background-color: transparent;
 }
 
 nav a:hover {
-  background-color: #4a90e2;
-  color: white;
+  background: linear-gradient(135deg, #5b86e5, #36d1dc);
+  color: #ffffff;
+  box-shadow: 0 0 8px rgba(86, 204, 242, 0.3);
 }
 
 nav a.router-link-exact-active {
   font-weight: 600;
+  color: #ffffff;
+  background-color: #36d1dc33;
+  border: 1px solid rgba(86, 204, 242, 0.3);
 }
 
 @media (max-width: 768px) {
@@ -159,6 +168,7 @@ nav a.router-link-exact-active {
   nav {
     width: 100%;
     margin-top: 10px;
+    justify-content: flex-start;
   }
 
   .navLinks {
@@ -171,5 +181,4 @@ nav a.router-link-exact-active {
     margin-bottom: 10px;
   }
 }
-
 </style>

@@ -13,7 +13,6 @@ import Video from '@/components/Video.vue'
         <h1>Loading...</h1>
     </div>
     <div v-else class="container">
-        <h1>Draft</h1>
         <div class="videos">
             <div class="video-card" v-for="video in videos" :key="video.id"
                 @click="selectVideo(video.id, video.videoName)">
@@ -98,6 +97,10 @@ export default {
 
 
 <style scoped>
+.container {
+    margin: 5rem;
+}
+
 .videos {
     display: flex;
     flex-direction: column;
@@ -111,16 +114,34 @@ export default {
     display: flex;
     cursor: pointer;
     gap: 1.5rem;
-    transition: background-color 0.2s ease;
+    transition: background-color 0.2s ease, box-shadow 0.3s ease;
     padding: 1rem;
     border-radius: 12px;
     align-items: center;
+    background-color: rgba(255, 255, 255, 0.02);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    position: relative;
+}
+
+.video-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, #5b86e5, #36d1dc);
+    clip-path: polygon(100% 0, 0% 100%, 100% 100%);
+    border-bottom-right-radius: 12px;
+    box-shadow: 0 0 10px rgba(86, 204, 242, 0.4);
 }
 
 .video-card:hover {
-    background-color: #f0f0f0;
-    color: black;
+    background-color: rgba(255, 255, 255, 0.397);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+    color: white;
 }
+
 
 .thumbnail {
     width: 352px;
@@ -128,10 +149,6 @@ export default {
     object-fit: cover;
     border-radius: 12px;
     transition: transform 0.3s ease;
-}
-
-.thumbnail:hover {
-    transform: scale(1.05);
 }
 
 .video-info {
