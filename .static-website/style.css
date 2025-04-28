@@ -1,5 +1,9 @@
 :root {
     background-color: #000000;
+    background-image: url(assets/background.svg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: top 32rem left 0 right 0 bottom 0;
 
     & * {
         font-family: Helvetica, sans-serif;
