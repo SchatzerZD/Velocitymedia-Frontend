@@ -13,6 +13,17 @@ import Video from '@/components/Video.vue'
         <h1>Loading...</h1>
     </div>
     <div v-else class="container">
+
+        <div class="selected-video">
+            <div class="modal-video-wrapper">
+                <Video :timestamp="currentTime" :videoId="selectedVideoId" @goToTimestamp="setVideoTimestamp">
+                    <video controls @timeupdate="updateTime($event)" id="selectedVideo">
+                        <source :src="'../../../media//videos/' + selectedVideoName" type="video/mp4" />
+                    </video>
+                </Video>
+            </div>
+        </div>
+
         <div class="videos">
             <div class="video-card" v-for="video in videos" :key="video.id"
                 @click="selectVideo(video.id, video.videoName)">
@@ -25,20 +36,6 @@ import Video from '@/components/Video.vue'
         </div>
     </div>
 
-
-
-    <Modal v-if="showModal" @closeModal="closeCurrentVideo" theme="black">
-        <div class="modal-video-wrapper">
-            <Video :timestamp="currentTime" :videoId="selectedVideoId" @goToTimestamp="setVideoTimestamp">
-                <video controls @timeupdate="updateTime($event)" id="selectedVideo">
-                    <source :src="'../../../media//videos/' + selectedVideoName" type="video/mp4" />
-                </video>
-            </Video>
-        </div>
-    </Modal>
-
-
-
 </template>
 
 <script>
@@ -50,7 +47,6 @@ export default {
             videos: [],
             currentTime: 0,
             comment: "",
-            showModal: false,
             selectedVideoId: null,
             selectedVideoName: '',
             loading: false
@@ -64,9 +60,15 @@ export default {
             console.log(this.comment)
         },
         selectVideo(videoId, videoName) {
-            this.showModal = true
             this.selectedVideoId = videoId
             this.selectedVideoName = videoName
+
+            this.$nextTick(() => {
+                const video = document.getElementById("selectedVideo");
+                if (video) {
+                    video.load();
+                }
+            });
         },
         closeCurrentVideo() {
             this.showModal = false
@@ -85,6 +87,8 @@ export default {
         await axios.get('http://localhost:8080/video/', tokenStore().headers)
             .then(response => {
                 this.videos = response.data
+                this.selectedVideoName = this.videos[0].videoName
+                this.selectedVideoId = this.videos[0].id
             })
             .catch(error => console.log(error.response.data))
         this.loading = false
@@ -95,5 +99,40 @@ export default {
 
 </script>
 
+<style scoped>
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
 
-<style scoped></style>
+
+.videos {
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+}
+
+.thumbnail {
+    width: 352px;
+    height: 196px;
+    object-fit: cover;
+    border-radius: 12px;
+    transition: transform 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.selected-video {
+    display: flex;
+    flex-direction: row;
+}
+
+.video-card {
+    cursor: pointer;
+}
+
+.modal-video-wrapper {
+    width: 75vw;
+}
+</style>
