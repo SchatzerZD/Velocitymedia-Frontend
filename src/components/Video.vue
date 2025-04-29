@@ -83,13 +83,18 @@ export default {
             })
             .catch(error => console.log(error))
     },
-    updated() {
-        axios.get('http://localhost:8080/video/' + this.videoId + '/comment', tokenStore().headers)
-            .then(response => {
-                this.comments = response.data
-            })
-            .catch(error => console.log(error))
+    watch: {
+        videoId(newId, oldId) {
+            if (newId !== oldId) {
+                axios.get(`http://localhost:8080/video/${newId}/comment`, tokenStore().headers)
+                    .then(response => {
+                        this.comments = response.data
+                    })
+                    .catch(error => console.log(error))
+            }
+        }
     }
+
 
 
 }
