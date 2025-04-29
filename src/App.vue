@@ -8,30 +8,34 @@ import SignUp from './views/account/SignUp.vue';
 
 <template>
   <header>
-    <div v-if="!loggedOut">
-      <h3>{{ username }}</h3>
-    </div>
     <div class="navbar-container">
+      <div class="user-info" v-if="!loggedOut">
+        <h3>{{ username }}</h3>
+      </div>
+
       <nav>
         <div class="nav-links">
           <RouterLink :to="{ name: 'Home' }">Home</RouterLink>
+
           <RouterLink to="" @click="toggleModal" v-if="loggedOut">Log in</RouterLink>
-          <div v-else-if="!admin" class="nav-links">
+
+          <template v-else-if="!admin">
             <RouterLink :to="{ name: 'BTS' }">BTS</RouterLink>
             <RouterLink :to="{ name: 'Log' }">Log</RouterLink>
             <RouterLink :to="{ name: 'Draft' }">Draft</RouterLink>
             <RouterLink to="" @click="logOut">Log out</RouterLink>
-          </div>
-          <div v-else class="nav-links">
+          </template>
+
+          <template v-else>
             <RouterLink :to="{ name: 'Admin' }">Admin Tools</RouterLink>
             <RouterLink to="" @click="logOut">Log out</RouterLink>
-          </div>
+          </template>
         </div>
-
       </nav>
     </div>
-
   </header>
+
+
 
   <h1>VELOCITY <span>FLOW</span></h1>
 
@@ -86,5 +90,62 @@ export default {
 }
 
 </script>
+<style scoped>
+header {
+  background-color: #000;
+  padding: 1rem 2rem;
+  border-bottom: 2px solid #3aaaff;
+}
 
-<style scoped></style>
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.user-info h3 {
+  color: #3aaaff;
+  font-weight: 600;
+  margin: 0;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+nav a {
+  color: white;
+  font-weight: 700;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+nav a:hover {
+  border-color: #3aaaff;
+  background-color: rgba(58, 170, 255, 0.1);
+  color: #3aaaff;
+}
+
+
+h1 {
+  margin-top: 2rem;
+}
+
+h1 span {
+  background: linear-gradient(to right, white 0%, #3aaaff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+h3 {
+  color: #3aaaff;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+</style>
