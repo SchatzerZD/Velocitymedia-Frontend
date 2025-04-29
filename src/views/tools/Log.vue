@@ -1,78 +1,38 @@
 <script setup>
 import { tokenStore } from '@/stores/tokenStore';
 import axios from 'axios';
-import Modal from '@/components/Modal.vue';
-import Sidebar from '@/components/Sidebar.vue'
 </script>
 
 <template>
     <div class="log-container">
-        <h1>Production Logs</h1>
-
         <div v-if="loading" class="loading-state">
             <h2>Loading...</h2>
         </div>
 
         <div v-else class="log-grid">
-            <div v-for="log in logs" :key="log.id" class="log-card" @click="selectLog(log)">
+            <div v-for="(log, index) in logs.slice(0, maxLogs)" :key="log.id" class="log-card">
                 <h3>{{ formatDate(log.logCreatedDate) }}</h3>
                 <p>{{ log.log.length > 200 ? log.log.slice(0, 200) + '...' : log.log }}</p>
                 <span class="read-more">Click to read more</span>
             </div>
         </div>
     </div>
-
-
-    <Sidebar :visible="showModal">
-        <div v-for="[date, logsByDate] in groupedLogs" :key="date" class="sidebar-date-section">
-            <h4 class="sidebar-date-title">{{ date }}</h4>
-            <div v-for="log in logsByDate" :key="log.id" class="sidebar-log-preview"
-                :class="{ active: selectedLog && selectedLog.id === log.id }" @click="selectLog(log)">
-                <p>{{ log.log }}</p>
-            </div>
-        </div>
-    </Sidebar>
-
-
-
-    <Modal v-if="showModal" @closeModal="toggleModal" theme="black">
-        <div class="log-modal-content">
-            <h3>{{ formatDate(selectedLog.logCreatedDate) }}</h3>
-            <div class="log-scroll">
-                <p>{{ selectedLog.log }}</p>
-            </div>
-        </div>
-    </Modal>
-
-
-
-
 </template>
 
 <script>
 export default {
+    props: {
+        maxLogs: {
+            type: Number,
+            default: Infinity
+        }
+    },
     data() {
         return {
             logs: [],
-            loading: false,
-            showModal: false,
-            selectedLog: null
+            loading: false
         };
     },
-    computed: {
-        groupedLogs() {
-            const groups = {};
-            this.logs.forEach(log => {
-                const dateStr = this.formatDate(log.logCreatedDate);
-                if (!groups[dateStr]) groups[dateStr] = [];
-                groups[dateStr].push(log);
-            });
-
-
-            return Object.entries(groups).sort((a, b) => new Date(b[0]) - new Date(a[0]));
-        }
-    },
-
     methods: {
         formatDate(timestamp) {
             const date = new Date(timestamp);
@@ -81,13 +41,6 @@ export default {
                 month: 'long',
                 day: 'numeric',
             });
-        },
-        selectLog(log) {
-            this.selectedLog = log
-            this.showModal = true
-        },
-        toggleModal() {
-            this.showModal = !this.showModal
         }
     },
     async mounted() {
@@ -103,4 +56,53 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.log-container {
+    background-color: #000;
+    color: #fff;
+    padding: 2rem 1rem;
+    display: flex;
+    justify-content: center;
+    text-align: left;
+}
+
+.loading-state {
+    text-align: center;
+}
+
+.log-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    max-width: 1010px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.log-card {
+    background-color: #000000;
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(255, 255, 255, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.log-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+}
+
+.log-card h3 {
+    margin: 0 0 0.5rem;
+    color: #ffffff;
+    font-weight: 900;
+}
+
+.read-more {
+    display: inline-block;
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    color: #bbb;
+    cursor: pointer;
+}
+</style>

@@ -1,6 +1,7 @@
 <script setup>
 import Row from '../components/Row.vue'
 import Box from '../components/Box.vue';
+import Log from './tools/Log.vue';
 import { tokenStore } from '@/stores/tokenStore';
 </script>
 
@@ -38,6 +39,11 @@ import { tokenStore } from '@/stores/tokenStore';
         </RouterLink>
 
     </Row>
+
+    <div class="log-wrapper">
+        <Log maxLogs="3" />
+    </div>
+
 
 </template>
 
@@ -94,6 +100,14 @@ a {
     text-decoration: none;
     color: inherit;
 }
+
+.log-wrapper {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    align-items: center;
+}
+
 
 @media(max-width:750px) {
     .row {

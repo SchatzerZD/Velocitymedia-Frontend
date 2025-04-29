@@ -101,7 +101,7 @@ export default {
 .video-container {
     display: flex;
     flex-direction: row;
-    gap: 2rem;
+    gap: 7rem;
     background-color: #000;
     padding: 2rem;
     border-radius: 10px;
@@ -195,8 +195,8 @@ export default {
     flex-direction: column;
     border-radius: 20px;
     padding: 1rem;
-    min-height: 37rem;
-    max-height: 37rem;
+    min-height: 37.5rem;
+    max-height: 37.5rem;
     overflow: hidden;
     max-width: 29rem;
 }
@@ -258,7 +258,7 @@ h3 {
 h3#comment-header {
     color: #3390ff;
     margin: 0;
-    margin-right: 7.8rem;
+    margin-right: 5.8rem;
 }
 
 @media(max-width: 1735px) {

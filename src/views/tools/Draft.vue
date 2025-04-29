@@ -123,6 +123,8 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 90%;
+    margin: 0 auto;
     margin-bottom: 5rem;
 }
 
@@ -191,7 +193,7 @@ export default {
 }
 
 .drafts-title {
-    width: 81%;
+    width: 90%;
 }
 
 .drafts-title h3 {
@@ -204,7 +206,7 @@ export default {
     display: flex;
     flex-direction: row;
     align-items: flex-start;
-    width: 80%;
+    width: 90%;
     gap: 2rem;
 }
 
