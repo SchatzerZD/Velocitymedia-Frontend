@@ -77,7 +77,9 @@ export default {
                     headers: {
                         "Authorization": "Bearer " + tokenStore().user.jwt,
                     }
-                }).then(response => console.log(response.data))
+                })
+                    .then(response => console.log(response.data))
+                    .catch(error => console.log(error))
                 this.selectedUser = null
                 this.uploading = false
             }

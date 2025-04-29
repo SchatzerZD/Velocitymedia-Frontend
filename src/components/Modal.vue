@@ -75,4 +75,14 @@ export default {
     cursor: pointer;
     color: red;
 }
+
+.modal img {
+    max-width: 90vw;
+    max-height: 80vh;
+    object-fit: contain;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+    display: block;
+    margin: 0 auto;
+}
 </style>

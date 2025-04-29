@@ -168,7 +168,6 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #1a1a2e;
     border-radius: 16px;
     overflow: hidden;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
