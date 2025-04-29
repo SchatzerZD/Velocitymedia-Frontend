@@ -34,4 +34,8 @@ export default {
 </script>
 
 
-<style scoped></style>
+<style scoped>
+.modal {
+    background-color: white;
+}
+</style>
