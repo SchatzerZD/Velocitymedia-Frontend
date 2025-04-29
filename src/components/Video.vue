@@ -1,18 +1,9 @@
 <template>
-
     <div class="video-container">
         <div class="video">
             <slot></slot>
-
-            <div class="under-video">
-                <p class="timestamp">{{ timestamp.toFixed(2) }}s</p>
-                <input type="text" placeholder="Add a comment with the current timestamp..." class="comment-input"
-                    v-model="commentText" />
-                <button :class="{ 'active': commentText.length > 0 }" :disabled="commentText.length === 0"
-                    class="comment-btn" @click="comment">Comment</button>
-            </div>
-
         </div>
+
         <div class="comments">
             <ul class="comment-list">
                 <li class="comment-item" v-for="comment in comments" :key="comment.id"
@@ -23,12 +14,18 @@
                     </div>
                 </li>
             </ul>
+
+            <div class="under-video">
+                <p class="timestamp">{{ timestamp.toFixed(2) }}s</p>
+                <input type="text" placeholder="Add a comment with the current timestamp..." class="comment-input"
+                    v-model="commentText" />
+                <button :class="{ 'active': commentText.length > 0 }" :disabled="commentText.length === 0"
+                    class="comment-btn" @click="comment">Comment</button>
+            </div>
         </div>
     </div>
-
-
-
 </template>
+
 
 
 <script>
@@ -93,7 +90,7 @@ export default {
     gap: 2rem;
     background-color: #000;
     padding: 2rem;
-    border-radius: 20px;
+    border-radius: 10px;
     color: white;
     max-width: 100%;
 }
@@ -105,18 +102,11 @@ export default {
     gap: 1rem;
 }
 
-.video ::v-deep video {
-    border-radius: 20px;
+:deep(video) {
+    border-radius: 10px;
     width: 100%;
     height: auto;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
-}
-
-.under-video {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-top: 0.5rem;
 }
 
 .timestamp {
@@ -152,23 +142,6 @@ export default {
     cursor: pointer;
 }
 
-.comments {
-    flex: 2;
-    display: flex;
-    flex-direction: column;
-    background-color: #111;
-    border-radius: 20px;
-    padding: 1rem;
-    overflow-y: auto;
-    max-height: 100%;
-}
-
-.comment-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
 .comment-item {
     background-color: #222;
     padding: 1rem;
@@ -197,5 +170,46 @@ export default {
     color: #ccc;
     font-size: 0.95rem;
     line-height: 1.4;
+}
+
+.comments {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    background-color: #111;
+    border-radius: 20px;
+    padding: 1rem;
+    max-height: 420px;
+    overflow: hidden;
+}
+
+.comment-list {
+    flex: 1;
+    overflow-y: auto;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    scrollbar-width: thin;
+    scrollbar-color: #555 transparent;
+}
+
+.comment-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.comment-list::-webkit-scrollbar-thumb {
+    background-color: #444;
+    border-radius: 8px;
+}
+
+.comment-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.under-video {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
 }
 </style>

@@ -130,22 +130,4 @@ nav a:hover {
   background-color: rgba(58, 170, 255, 0.1);
   color: #3aaaff;
 }
-
-
-h1 {
-  margin-top: 2rem;
-}
-
-h1 span {
-  background: linear-gradient(to right, white 0%, #3aaaff 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-h3 {
-  color: #3aaaff;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  text-align: center;
-}
 </style>

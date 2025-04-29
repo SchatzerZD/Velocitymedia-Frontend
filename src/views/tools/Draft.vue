@@ -60,14 +60,17 @@ export default {
             console.log(this.comment)
         },
         selectVideo(videoId, videoName) {
-            this.selectedVideoId = videoId
-            this.selectedVideoName = videoName
+            var savedScrollTop = window.scrollY;
+
+            this.selectedVideoId = videoId;
+            this.selectedVideoName = videoName;
 
             this.$nextTick(() => {
                 const video = document.getElementById("selectedVideo");
                 if (video) {
                     video.load();
                 }
+                window.scrollTo(0, savedScrollTop);
             });
         },
         closeCurrentVideo() {
