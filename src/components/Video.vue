@@ -1,4 +1,17 @@
+<script setup>
+import { ArrowDownTrayIcon } from '@heroicons/vue/24/outline'
+</script>
+
+
 <template>
+    <div class="video-header">
+        <div class="video-title">
+            <ArrowDownTrayIcon class="upload-icon" />
+            <h3>{{ videoName }}</h3>
+        </div>
+        <h3 id="comment-header">KOMMENTARER</h3>
+    </div>
+
     <div class="video-container">
         <div class="video">
             <slot></slot>
@@ -35,7 +48,8 @@ import axios from 'axios';
 
 export default {
 
-    props: ['timestamp', 'videoId'],
+    props: ['timestamp', 'videoId', 'videoName'],
+    emits: ['goToTimestamp'],
     data() {
         return {
             commentText: '',
@@ -93,6 +107,8 @@ export default {
     border-radius: 10px;
     color: white;
     max-width: 100%;
+    padding-top: 0;
+    padding-bottom: 0;
 }
 
 .video {
@@ -104,7 +120,7 @@ export default {
 
 :deep(video) {
     border-radius: 10px;
-    width: 100%;
+    width: 66rem;
     height: auto;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
 }
@@ -158,6 +174,7 @@ export default {
 .comment-body {
     display: flex;
     flex-direction: column;
+    text-align: left;
 }
 
 .username {
@@ -168,7 +185,7 @@ export default {
 
 .comment-text {
     color: #ccc;
-    font-size: 0.95rem;
+    font-size: 0.8rem;
     line-height: 1.4;
 }
 
@@ -176,11 +193,12 @@ export default {
     flex: 2;
     display: flex;
     flex-direction: column;
-    background-color: #111;
     border-radius: 20px;
     padding: 1rem;
-    max-height: 420px;
+    min-height: 37rem;
+    max-height: 37rem;
     overflow: hidden;
+    max-width: 29rem;
 }
 
 .comment-list {
@@ -211,5 +229,43 @@ export default {
     align-items: center;
     gap: 1rem;
     margin-top: 1rem;
+}
+
+h3 {
+    margin: 0;
+}
+
+.video-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 4rem;
+    margin-bottom: 1rem;
+}
+
+.video-title {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+}
+
+.upload-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    color: white;
+}
+
+h3#comment-header {
+    color: #3390ff;
+    margin: 0;
+    margin-right: 7.8rem;
+}
+
+@media(max-width: 1735px) {
+    h3#comment-header {
+        color: #3390ff;
+        margin: 0;
+        margin-right: 3.4rem;
+    }
 }
 </style>

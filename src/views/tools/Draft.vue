@@ -13,10 +13,10 @@ import Video from '@/components/Video.vue'
         <h1>Loading...</h1>
     </div>
     <div v-else class="container">
-
         <div class="selected-video">
             <div class="modal-video-wrapper">
-                <Video :timestamp="currentTime" :videoId="selectedVideoId" @goToTimestamp="setVideoTimestamp">
+                <Video :timestamp="currentTime" :videoId="selectedVideoId" @goToTimestamp="setVideoTimestamp"
+                    :videoName="selectedVideoName">
                     <video controls @timeupdate="updateTime($event)" id="selectedVideo">
                         <source :src="'../../../media//videos/' + selectedVideoName" type="video/mp4" />
                     </video>
@@ -24,9 +24,13 @@ import Video from '@/components/Video.vue'
             </div>
         </div>
 
+        <div class="drafts-title">
+            <h3>UTKAST</h3>
+        </div>
+
         <div class="videos">
-            <div class="video-card" v-for="video in videos" :key="video.id"
-                @click="selectVideo(video.id, video.videoName)">
+            <div class="video-card" :class="{ selected: video.id === selectedVideoId }" v-for="video in videos"
+                :key="video.id" @click="selectVideo(video.id, video.videoName)">
                 <img class="thumbnail" :src="'../../../media//videos/' + video.videoName.replace(/\.[^/.]+$/, '.jpg')"
                     alt="Video thumbnail" />
                 <div class="video-info">
@@ -49,7 +53,8 @@ export default {
             comment: "",
             selectedVideoId: null,
             selectedVideoName: '',
-            loading: false
+            loading: false,
+            savedScrollTop: 0
         }
     },
     methods: {
@@ -60,7 +65,7 @@ export default {
             console.log(this.comment)
         },
         selectVideo(videoId, videoName) {
-            var savedScrollTop = window.scrollY;
+            this.savedScrollTop = window.scrollY;
 
             this.selectedVideoId = videoId;
             this.selectedVideoName = videoName;
@@ -70,7 +75,7 @@ export default {
                 if (video) {
                     video.load();
                 }
-                window.scrollTo(0, savedScrollTop);
+                window.scrollTo(0, this.savedScrollTop);
             });
         },
         closeCurrentVideo() {
@@ -107,35 +112,79 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2rem;
 }
 
 
 .videos {
     display: flex;
     flex-direction: row;
+    flex-wrap: nowrap;
     gap: 2rem;
+    overflow-x: auto;
+    padding: 1rem 0;
+    width: 82%;
+}
+
+.videos::-webkit-scrollbar {
+    height: 8px;
+}
+
+.videos::-webkit-scrollbar-thumb {
+    background-color: #444;
+    border-radius: 8px;
+}
+
+.videos::-webkit-scrollbar-track {
+    background: transparent;
 }
 
 .thumbnail {
     width: 352px;
     height: 196px;
     object-fit: cover;
-    border-radius: 12px;
+    border-radius: 0;
     transition: transform 0.3s ease;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    display: block;
 }
 
-.selected-video {
-    display: flex;
-    flex-direction: row;
-}
 
 .video-card {
+    flex: 0 0 auto;
     cursor: pointer;
+    position: relative;
+    border: 3px solid transparent;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: border 0.3s ease;
+}
+
+.video-card.selected {
+    border: 3px solid #3390ff;
+}
+
+.video-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    text-align: center;
+    padding: 0.5rem 0;
+    font-size: 1rem;
 }
 
 .modal-video-wrapper {
-    width: 75vw;
+    width: 85vw;
+}
+
+.drafts-title {
+    width: 81%;
+}
+
+.drafts-title h3 {
+    color: #3390ff;
+    text-align: left;
+    margin: 0;
 }
 </style>
