@@ -28,17 +28,28 @@ import Video from '@/components/Video.vue'
             <h3>UTKAST</h3>
         </div>
 
-        <div class="videos">
-            <div class="video-card" :class="{ selected: video.id === selectedVideoId }" v-for="video in videos"
-                :key="video.id" @click="selectVideo(video.id, video.videoName)">
-                <img class="thumbnail" :src="'../../../media//videos/' + video.videoName.replace(/\.[^/.]+$/, '.jpg')"
-                    alt="Video thumbnail" />
+        <div class="videos-wrapper">
+            <div class="videos">
+                <div class="video-card" :class="{ selected: video.id === selectedVideoId }" v-for="video in videos"
+                    :key="video.id" @click="selectVideo(video.id, video.videoName)">
+                    <img class="thumbnail"
+                        :src="'../../../media//videos/' + video.videoName.replace(/\.[^/.]+$/, '.jpg')"
+                        alt="Video thumbnail" />
+                    <div class="video-info">
+                        <h3 class="video-title">{{ video.videoName }}</h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="video-placeholder video-card">
+                <img src="../../../media//images/static/pluss.jpg" alt="Placeholder" />
                 <div class="video-info">
-                    <h3 class="video-title">{{ video.videoName }}</h3>
+                    <h3 class="video-title">REVISJONER</h3>
                 </div>
             </div>
         </div>
     </div>
+
 
 </template>
 
@@ -112,6 +123,7 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-bottom: 5rem;
 }
 
 
@@ -186,5 +198,49 @@ export default {
     color: #3390ff;
     text-align: left;
     margin: 0;
+}
+
+.videos-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    width: 80%;
+    gap: 2rem;
+}
+
+.videos {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 2rem;
+    flex-grow: 1;
+}
+
+.video-placeholder {
+    width: 352px;
+    height: 196px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+.video-placeholder img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.video-placeholder img:hover {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    border: 0.2rem solid #3390ff;
 }
 </style>
