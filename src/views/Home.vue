@@ -6,10 +6,8 @@ import { tokenStore } from '@/stores/tokenStore';
 
 <template>
 
-    <h1>VELOCITY <span>FLOW</span></h1>
-
     <Row v-if="loggedIn">
-        <RouterLink :to="{ name: 'BTS' }">
+        <RouterLink to="/404">
             <Box>
                 <h2>KONTRAKT</h2>
             </Box>
@@ -21,7 +19,7 @@ import { tokenStore } from '@/stores/tokenStore';
             <span></span>
         </div>
 
-        <RouterLink :to="{ name: 'Log' }">
+        <RouterLink :to="{ name: 'Draft' }">
             <Box>
                 <h2>GJENNOMGANG</h2>
             </Box>
@@ -33,7 +31,7 @@ import { tokenStore } from '@/stores/tokenStore';
             <span></span>
         </div>
 
-        <RouterLink :to="{ name: 'Draft' }">
+        <RouterLink to="/404">
             <Box>
                 <h2>FAKTURA</h2>
             </Box>

@@ -33,7 +33,11 @@ import SignUp from './views/account/SignUp.vue';
 
   </header>
 
+  <h1>VELOCITY <span>FLOW</span></h1>
+
   <RouterView />
+
+
 
   <Modal v-if="showModal" @closeModal="toggleModal">
     <Login @register="toggleRegister" v-if="!register"></Login>
