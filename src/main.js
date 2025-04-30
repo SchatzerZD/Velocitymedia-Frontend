@@ -13,3 +13,5 @@ app.use(createPinia())
 app.use(router)
 
 app.mount('#app')
+
+//api key fiken: 8840530608.uzR6d9qkcavB6mPiqSgRnu2UQKVVh2so
