@@ -20,9 +20,6 @@ import SignUp from './views/account/SignUp.vue';
           <RouterLink to="" @click="toggleModal" v-if="loggedOut">Log in</RouterLink>
 
           <template v-else-if="!admin">
-            <RouterLink :to="{ name: 'BTS' }">BTS</RouterLink>
-            <RouterLink :to="{ name: 'Log' }">Log</RouterLink>
-            <RouterLink :to="{ name: 'Draft' }">Draft</RouterLink>
             <RouterLink to="" @click="logOut">Log out</RouterLink>
           </template>
 
