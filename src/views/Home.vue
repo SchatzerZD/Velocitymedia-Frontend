@@ -108,12 +108,26 @@ export default {
     },
     methods: {
         contract() {
-            if (this.$router.isReady() && !this.$route.query.code && !this.$route.query.state) {
+            if ((this.$router.isReady() && !this.$route.query.code && !this.$route.query.state)) {
                 const firstResult = Math.random().toString(36).substring(2, 12);
                 const secondResult = Math.random().toString(36).substring(2, 12);
                 window.location.href = `https://fiken.no/oauth/authorize?response_type=code&client_id=q35jROmqSY4sdSxn23685689881289974&redirect_uri=http://localhost:5173&state=${firstResult + secondResult}`
             } else {
-                this.toggleModal()
+                if (tokenStore().user.invoiceId) {
+                    axios.get("http://localhost:8080/fiken/get-contract/" + tokenStore().user.invoiceId, {
+                        headers: {
+                            "Authorization": "Bearer " + this.accessToken
+                        }
+                    })
+                        .then(response => {
+                            this.invoiceBody = response.data
+                            this.invoiceLink = "https://fiken.no/foretak/fiken-demo-gammel-burger-as/webfaktura/" + tokenStore().user.invoiceId;
+                            this.toggleModal()
+                        })
+                        .catch(error => console.log(error))
+                } else {
+                    this.toggleModal()
+                }
             }
         },
         toggleModal() {
@@ -158,7 +172,6 @@ export default {
                 if (!this.contractComplete) {
                     this.toggleModal()
                 }
-
                 axios.post('http://localhost:8080/fiken/token', {
                     code: this.$route.query.code,
                     redirect_uri: "http://localhost:5173",
@@ -166,19 +179,7 @@ export default {
                 }).then(res => {
                     this.accessToken = res.data.access_token;
 
-                    if (tokenStore().user.invoiceId) {
-                        axios.get("http://localhost:8080/fiken/get-contract/" + tokenStore().user.invoiceId, {
-                            headers: {
-                                "Authorization": "Bearer " + this.accessToken
-                            }
-                        })
-                            .then(response => {
-                                this.invoiceBody = response.data
-                                this.invoiceLink = "https://fiken.no/foretak/fiken-demo-gammel-burger-as/webfaktura/" + tokenStore().user.invoiceId;
-                                this.toggleModal()
-                            })
-                            .catch(error => console.log(error))
-                    }
+                    this.contract()
                 });
             }
         }
