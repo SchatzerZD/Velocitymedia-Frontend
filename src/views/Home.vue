@@ -11,7 +11,7 @@ import InvoicePreview from '@/components/InvoicePreview.vue';
 <template>
 
     <Row v-if="loggedIn" class="container">
-        <Box @click="contract">
+        <Box @click="contract" :class="{ complete: contractComplete }">
             <h2>KONTRAKT</h2>
         </Box>
 
@@ -46,7 +46,7 @@ import InvoicePreview from '@/components/InvoicePreview.vue';
     </div>
 
     <Modal v-if="showModal" @closeModal="toggleModal">
-        <div v-if="!invoiceLink">
+        <div v-if="!contractComplete">
             <h2>Opprett kontrakt og faktura</h2>
             <form @submit.prevent="submitContract">
 
@@ -87,8 +87,10 @@ export default {
             loggedIn: false,
             showModal: false,
             accessToken: null,
+            contractComplete: false,
 
             formData: {
+                accessToken: '',
                 customerName: '',
                 customerEmail: '',
                 contractText: 'Tjeneste',
@@ -106,23 +108,24 @@ export default {
     },
     methods: {
         contract() {
-            const firstResult = Math.random().toString(36).substring(2, 12);
-            const secondResult = Math.random().toString(36).substring(2, 12);
-            window.location.href = `https://fiken.no/oauth/authorize?response_type=code&client_id=q35jROmqSY4sdSxn23685689881289974&redirect_uri=http://localhost:5173&state=${firstResult + secondResult}`
+            if (!this.invoiceLink) {
+                const firstResult = Math.random().toString(36).substring(2, 12);
+                const secondResult = Math.random().toString(36).substring(2, 12);
+                window.location.href = `https://fiken.no/oauth/authorize?response_type=code&client_id=q35jROmqSY4sdSxn23685689881289974&redirect_uri=http://localhost:5173&state=${firstResult + secondResult}`
+            } else {
+                this.toggleModal()
+            }
         },
         toggleModal() {
             this.showModal = !this.showModal
         },
         submitContract() {
-            axios.post('http://localhost:8080/fiken/create-contract', this.formData, {
-                headers: {
-                    Authorization: `Bearer ${this.accessToken}`
-                }
-            })
+            this.formData.accessToken = this.accessToken
+            axios.post('http://localhost:8080/fiken/create-contract', this.formData, tokenStore().headers)
                 .then(res => {
                     this.invoiceLink = res.data.invoiceUrl;
                     this.invoiceBody = res.data.content;
-
+                    this.contractComplete = true
                 })
                 .catch(err => {
                     console.error('Feil ved oppretting:', err);
@@ -136,9 +139,25 @@ export default {
             this.loggedIn = true
         }
 
+        if (!tokenStore().user.invoiceId) {
+            axios.get('http://localhost:8080/user/me', tokenStore().headers)
+                .then(response => {
+                    tokenStore().changeAccountId(response.data.accountId)
+                    tokenStore().changeInvoiceId(response.data.invoiceId)
+                    if (response.data.accountId !== null && response.data.invoiceId !== null) {
+                        this.contractComplete = true
+                    }
+                })
+                .catch(error => console.log(error))
+        } else {
+            this.contractComplete = true
+        }
+
         if (this.$router.isReady()) {
             if (this.$route.query.code && this.$route.query.state) {
-                this.toggleModal()
+                if (!this.contractComplete) {
+                    this.toggleModal()
+                }
 
                 axios.post('http://localhost:8080/fiken/token', {
                     code: this.$route.query.code,
@@ -146,10 +165,25 @@ export default {
                     state: this.$route.query.state
                 }).then(res => {
                     this.accessToken = res.data.access_token;
-                });
 
+                    if (tokenStore().user.invoiceId) {
+                        axios.get("http://localhost:8080/fiken/get-contract/" + tokenStore().user.invoiceId, {
+                            headers: {
+                                "Authorization": "Bearer " + this.accessToken
+                            }
+                        })
+                            .then(response => {
+                                this.invoiceBody = response.data
+                                this.invoiceLink = "https://fiken.no/foretak/fiken-demo-gammel-burger-as/webfaktura/" + tokenStore().user.invoiceId;
+                                this.toggleModal()
+                            })
+                            .catch(error => console.log(error))
+                    }
+                });
             }
         }
+
+
 
     }
 
@@ -204,6 +238,11 @@ a {
     justify-content: center;
     width: 100%;
     align-items: center;
+}
+
+.complete {
+    background-color: #3aaaff;
+    color: white;
 }
 
 
