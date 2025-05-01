@@ -6,6 +6,7 @@ import Log from '@/views/tools/Log.vue'
 import BTS from '@/views/tools/BTS.vue'
 import Admin from '@/views/tools/Admin.vue'
 import { tokenStore } from '@/stores/tokenStore'
+import Review from '@/views/Review.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -35,6 +36,11 @@ const router = createRouter({
       path: '/admin',
       name: 'Admin',
       component: Admin
+    },
+    {
+      path: '/review',
+      name: 'Review',
+      component: Review
     },
 
     {
