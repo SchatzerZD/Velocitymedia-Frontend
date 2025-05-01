@@ -2,17 +2,17 @@
 import Row from '../components/Row.vue'
 import Box from '../components/Box.vue';
 import Log from './tools/Log.vue';
+import Modal from '@/components/Modal.vue';
 import { tokenStore } from '@/stores/tokenStore';
+import axios from 'axios';
 </script>
 
 <template>
 
-    <Row v-if="loggedIn">
-        <RouterLink to="/404">
-            <Box>
-                <h2>KONTRAKT</h2>
-            </Box>
-        </RouterLink>
+    <Row v-if="loggedIn" class="container">
+        <Box @click="contract">
+            <h2>KONTRAKT</h2>
+        </Box>
 
         <div class="dots">
             <span></span>
@@ -20,7 +20,7 @@ import { tokenStore } from '@/stores/tokenStore';
             <span></span>
         </div>
 
-        <RouterLink :to="{ name: 'Draft' }">
+        <RouterLink :to="{ name: 'Review' }">
             <Box>
                 <h2>GJENNOMGANG</h2>
             </Box>
@@ -44,6 +44,10 @@ import { tokenStore } from '@/stores/tokenStore';
         <Log maxLogs="3" />
     </div>
 
+    <Modal v-if="showModal" @closeModal="toggleModal">
+        <h1></h1>
+    </Modal>
+
 
 </template>
 
@@ -54,13 +58,51 @@ export default {
 
     data() {
         return {
-            loggedIn: false
+            loggedIn: false,
+            showModal: false,
+            accessToken: null
+        }
+    },
+    methods: {
+        contract() {
+            const firstResult = Math.random().toString(36).substring(2, 12);
+            const secondResult = Math.random().toString(36).substring(2, 12);
+            window.location.href = `https://fiken.no/oauth/authorize?response_type=code&client_id=q35jROmqSY4sdSxn23685689881289974&redirect_uri=http://localhost:5173&state=${firstResult + secondResult}`
+        },
+        toggleModal() {
+            this.showModal = !this.showModal
         }
     },
     mounted() {
         if (tokenStore().user.jwt) {
             this.loggedIn = true
         }
+
+        if (this.$router.isReady()) {
+            if (this.$route.query.code && this.$route.query.state) {
+                this.toggleModal()
+
+                axios.post('http://localhost:8080/fiken/token', {
+                    code: this.$route.query.code,
+                    redirect_uri: "http://localhost:5173",
+                    state: this.$route.query.state
+                }).then(res => {
+                    this.accessToken = res.data.access_token;
+
+                    /*                     
+                    axios.get('http://localhost:8080/fiken/companies', {
+                                            headers: {
+                                                Authorization: `Bearer ${accessToken}`
+                                            }
+                                        }).then(invoiceResponse => {
+                                            console.log(invoiceResponse.data);
+                     }); 
+                    */
+                });
+
+            }
+        }
+
     }
 
 }
@@ -68,6 +110,14 @@ export default {
 </script>
 
 <style scoped>
+.box:hover {
+    cursor: pointer;
+}
+
+.container {
+    margin-top: 8rem;
+}
+
 .dots {
     color: #3aaaff;
     font-size: 4rem;
