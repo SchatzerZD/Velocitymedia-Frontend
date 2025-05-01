@@ -144,7 +144,7 @@ export default {
                 .then(response => {
                     tokenStore().changeAccountId(response.data.accountId)
                     tokenStore().changeInvoiceId(response.data.invoiceId)
-                    if (response.data.accountId !== null && response.data.invoiceId !== null) {
+                    if (response.data.accountId !== undefined && response.data.invoiceId !== undefined) {
                         this.contractComplete = true
                     }
                 })

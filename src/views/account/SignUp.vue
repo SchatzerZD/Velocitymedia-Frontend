@@ -56,6 +56,8 @@ export default {
             console.log("login successful")
             tokenStore().changeJWT(jwt)
             tokenStore().changeUsername(this.user.username)
+            tokenStore().changeAccountId("")
+            tokenStore().changeInvoiceId("")
             window.location.replace("http://localhost:5173/")
         },
         login() {
