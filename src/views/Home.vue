@@ -144,7 +144,7 @@ export default {
                 .then(response => {
                     tokenStore().changeAccountId(response.data.accountId)
                     tokenStore().changeInvoiceId(response.data.invoiceId)
-                    if (response.data.accountId !== undefined && response.data.invoiceId !== undefined) {
+                    if (response.data.accountId && response.data.invoiceId) {
                         this.contractComplete = true
                     }
                 })
@@ -249,6 +249,56 @@ a {
     background-color: #3aaaff;
     height: 50%;
     border-radius: 100px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
+    align-items: stretch;
+}
+
+label {
+    font-weight: bold;
+    color: inherit;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+
+input[type="text"],
+input[type="email"] {
+    padding: 0.75rem;
+    border-radius: 8px;
+    border: 2px solid #3aaaff;
+    background-color: #1a1a1a;
+    color: white;
+    font-size: 1rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus {
+    outline: none;
+    border-color: #00bfff;
+    box-shadow: 0 0 10px rgba(0, 191, 255, 0.5);
+}
+
+button[type="submit"] {
+    background-color: #3aaaff;
+    color: white;
+    font-weight: bold;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    padding: 0.75rem;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+button[type="submit"]:hover {
+    background-color: #00bfff;
+    box-shadow: 0 0 12px rgba(0, 191, 255, 0.6);
 }
 
 @media(max-width:750px) {
