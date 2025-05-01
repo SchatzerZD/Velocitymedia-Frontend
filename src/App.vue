@@ -69,6 +69,8 @@ export default {
     logOut() {
       tokenStore().changeJWT("")
       tokenStore().changeUsername("")
+      tokenStore().changeAccountId("")
+      tokenStore().changeInvoiceId("")
       window.location.replace("http://localhost:5173/")
     },
     toggleModal() {
