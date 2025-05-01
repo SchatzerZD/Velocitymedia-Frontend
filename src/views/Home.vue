@@ -15,7 +15,7 @@ import InvoicePreview from '@/components/InvoicePreview.vue';
             <h2>KONTRAKT</h2>
         </Box>
 
-        <div class="dots">
+        <div class="dots" :class="{ completeDots: contractComplete }">
             <span></span>
             <span></span>
             <span></span>
@@ -245,6 +245,11 @@ a {
     color: white;
 }
 
+.completeDots {
+    background-color: #3aaaff;
+    height: 50%;
+    border-radius: 100px;
+}
 
 @media(max-width:750px) {
     .row {
