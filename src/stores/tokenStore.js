@@ -7,6 +7,8 @@ export const tokenStore = defineStore("user", () => {
     const user = ref({
         username: "",
         jwt: "",
+        accountId: "",
+        invoiceId: "",
         admin: false
     })
 
@@ -61,8 +63,16 @@ export const tokenStore = defineStore("user", () => {
         }
     }
 
+    const changeAccountId = (accountId) => {
+        user.value.accountId = accountId
+    }
 
-    return { user, headers, changeJWT, changeUsername }
+    const changeInvoiceId = (invoiceId) => {
+        user.value.invoiceId = invoiceId
+    }
+
+
+    return { user, headers, changeJWT, changeUsername, changeAccountId, changeInvoiceId}
 })
 
 
