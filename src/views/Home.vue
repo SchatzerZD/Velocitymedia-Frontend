@@ -5,6 +5,7 @@ import Log from './tools/Log.vue';
 import Modal from '@/components/Modal.vue';
 import { tokenStore } from '@/stores/tokenStore';
 import axios from 'axios';
+import InvoicePreview from '@/components/InvoicePreview.vue';
 </script>
 
 <template>
@@ -45,7 +46,32 @@ import axios from 'axios';
     </div>
 
     <Modal v-if="showModal" @closeModal="toggleModal">
-        <h1></h1>
+        <div v-if="!invoiceLink">
+            <h2>Opprett kontrakt og faktura</h2>
+            <form @submit.prevent="submitContract">
+
+                <label>Navn</label>
+                <input type="text" v-model="formData.customerName" required>
+
+                <label>Email</label>
+                <input type="email" v-model="formData.customerEmail" required>
+
+                <label>Adresse</label>
+                <input type="text" placeholder="Gateadresse" v-model="formData.address.streetAddress" required>
+                <input type="text" placeholder="Postnummer" v-model="formData.address.postCode" required>
+                <input type="text" placeholder="By" v-model="formData.address.city" required>
+                <input type="text" placeholder="Land" v-model="formData.address.country" required>
+
+                <button type="submit">Send</button>
+            </form>
+        </div>
+        <div v-else>
+            <h2>Faktura opprettet</h2>
+            <p>
+                <a :href="invoiceLink" target="_blank">Klikk her for å se fakturaen på Fiken.no</a>
+            </p>
+            <InvoicePreview :invoice="invoiceBody"></InvoicePreview>
+        </div>
     </Modal>
 
 
@@ -60,7 +86,22 @@ export default {
         return {
             loggedIn: false,
             showModal: false,
-            accessToken: null
+            accessToken: null,
+
+            formData: {
+                customerName: '',
+                customerEmail: '',
+                contractText: 'Tjeneste',
+                address: {
+                    streetAddress: '',
+                    postCode: '',
+                    city: '',
+                    country: ''
+                }
+            },
+            invoiceLink: null,
+            invoiceBody: null
+
         }
     },
     methods: {
@@ -71,7 +112,24 @@ export default {
         },
         toggleModal() {
             this.showModal = !this.showModal
+        },
+        submitContract() {
+            axios.post('http://localhost:8080/fiken/create-contract', this.formData, {
+                headers: {
+                    Authorization: `Bearer ${this.accessToken}`
+                }
+            })
+                .then(res => {
+                    this.invoiceLink = res.data.invoiceUrl;
+                    this.invoiceBody = res.data.content;
+
+                })
+                .catch(err => {
+                    console.error('Feil ved oppretting:', err);
+                    alert('Kunne ikke opprette kontrakt/faktura. Sjekk konsollen.');
+                });
         }
+
     },
     mounted() {
         if (tokenStore().user.jwt) {
@@ -88,16 +146,6 @@ export default {
                     state: this.$route.query.state
                 }).then(res => {
                     this.accessToken = res.data.access_token;
-
-                    /*                     
-                    axios.get('http://localhost:8080/fiken/companies', {
-                                            headers: {
-                                                Authorization: `Bearer ${accessToken}`
-                                            }
-                                        }).then(invoiceResponse => {
-                                            console.log(invoiceResponse.data);
-                     }); 
-                    */
                 });
 
             }
