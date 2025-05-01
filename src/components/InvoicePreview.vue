@@ -9,7 +9,7 @@ pdfMake.vfs = pdfFonts.vfs
 
 <template>
     <div v-if="pdfUrl" class="pdf-modal">
-        <iframe :src="pdfUrl" width="1000px" height="600px" style="border: none;"></iframe>
+        <iframe :src="pdfUrl" width="600px" height="600px" style="border: none;"></iframe>
     </div>
 </template>
 
