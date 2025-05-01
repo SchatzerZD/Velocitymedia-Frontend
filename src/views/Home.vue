@@ -108,7 +108,7 @@ export default {
     },
     methods: {
         contract() {
-            if (!this.invoiceLink) {
+            if (this.$router.isReady() && !this.$route.query.code && !this.$route.query.state) {
                 const firstResult = Math.random().toString(36).substring(2, 12);
                 const secondResult = Math.random().toString(36).substring(2, 12);
                 window.location.href = `https://fiken.no/oauth/authorize?response_type=code&client_id=q35jROmqSY4sdSxn23685689881289974&redirect_uri=http://localhost:5173&state=${firstResult + secondResult}`
