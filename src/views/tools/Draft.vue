@@ -9,10 +9,7 @@ import Video from '@/components/Video.vue'
 
 
 <template>
-    <div v-if="loading" class="container">
-        <h1>Loading...</h1>
-    </div>
-    <div v-else class="container">
+    <div v-if="load" class="container">
         <div class="selected-video">
             <div class="modal-video-wrapper">
                 <Video :timestamp="currentTime" :videoId="selectedVideoId" @goToTimestamp="setVideoTimestamp"
@@ -64,8 +61,8 @@ export default {
             comment: "",
             selectedVideoId: null,
             selectedVideoName: '',
-            loading: false,
-            savedScrollTop: 0
+            savedScrollTop: 0,
+            load: false
         }
     },
     methods: {
@@ -102,15 +99,17 @@ export default {
     },
 
     async mounted() {
-        this.loading = true
+
         await axios.get('http://localhost:8080/video/', tokenStore().headers)
             .then(response => {
                 this.videos = response.data
                 this.selectedVideoName = this.videos[0].videoName
                 this.selectedVideoId = this.videos[0].id
+                this.load = true
+
             })
             .catch(error => console.log(error.response.data))
-        this.loading = false
+
     }
 
 
@@ -244,5 +243,20 @@ export default {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     cursor: pointer;
     border: 0.2rem solid #3390ff;
+}
+
+.container {
+    opacity: 0;
+    animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 </style>

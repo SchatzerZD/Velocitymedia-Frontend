@@ -23,7 +23,7 @@ import InvoicePreview from '@/components/InvoicePreview.vue';
 
         <RouterLink :to="{ name: 'Review' }">
             <Box>
-                <h2>GJENNOMGANG</h2>
+                <h2 :class="{ blue: !contractComplete }">GJENNOMGANG</h2>
             </Box>
         </RouterLink>
 
@@ -35,7 +35,7 @@ import InvoicePreview from '@/components/InvoicePreview.vue';
 
         <RouterLink to="/404">
             <Box>
-                <h2>FAKTURA</h2>
+                <h2 :class="{ blue: !reviewComplete }">FAKTURA</h2>
             </Box>
         </RouterLink>
 
@@ -87,7 +87,10 @@ export default {
             loggedIn: false,
             showModal: false,
             accessToken: null,
+
             contractComplete: false,
+            reviewComplete: false,
+            fakturaComplete: false,
 
             formData: {
                 accessToken: '',
@@ -299,6 +302,10 @@ button[type="submit"] {
 button[type="submit"]:hover {
     background-color: #00bfff;
     box-shadow: 0 0 12px rgba(0, 191, 255, 0.6);
+}
+
+.blue {
+    color: #3aaaff
 }
 
 @media(max-width:750px) {

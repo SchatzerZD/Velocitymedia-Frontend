@@ -42,10 +42,14 @@ export default {
     color: black;
     border-radius: 16px;
     padding: 2rem;
-    max-width: 29%;
-    width: 90%;
-    box-shadow: 0 0 30px rgba(0, 123, 255, 0.3);
+    max-width: 90vw;
+    max-height: 90vh;
+    overflow: auto;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 0 30px rgba(0, 123, 255, 0.3);
     border: 2px solid #007bff;
     font-family: 'Arial', sans-serif;
 }
@@ -61,12 +65,16 @@ export default {
 }
 
 #closeButton {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
     font-size: 1.5rem;
     font-weight: bold;
     color: #007bff;
-    cursor: pointer;
-    border: none;
     background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 10;
     transition: color 0.3s;
 }
 

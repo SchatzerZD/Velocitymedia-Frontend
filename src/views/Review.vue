@@ -3,13 +3,15 @@ import Row from '../components/Row.vue'
 import Box from '../components/Box.vue';
 import Log from './tools/Log.vue';
 import { tokenStore } from '@/stores/tokenStore';
+import axios from 'axios';
+
 </script>
 
 <template>
 
     <Row v-if="loggedIn" class="container">
-        <RouterLink to="/404">
-            <Box>
+        <RouterLink to="/BTS">
+            <Box :class="{ complete: productionComplete }">
                 <h2>PRODUKSJON</h2>
             </Box>
         </RouterLink>
@@ -22,7 +24,7 @@ import { tokenStore } from '@/stores/tokenStore';
 
         <RouterLink :to="{ name: 'Draft' }">
             <Box>
-                <h2>KLIPPING</h2>
+                <h2 :class="{ blue: !productionComplete }">KLIPPING</h2>
             </Box>
         </RouterLink>
 
@@ -32,11 +34,6 @@ import { tokenStore } from '@/stores/tokenStore';
             <span></span>
         </div>
 
-        <RouterLink to="/404">
-            <Box>
-                <h2>FAKTURA</h2>
-            </Box>
-        </RouterLink>
 
     </Row>
 
@@ -50,13 +47,27 @@ export default {
 
     data() {
         return {
-            loggedIn: false
+            loggedIn: false,
+
+            productionComplete: false,
+            clippingComplete: false,
+
+
         }
     },
-    mounted() {
+    async mounted() {
         if (tokenStore().user.jwt) {
             this.loggedIn = true
         }
+
+        await axios.get('http://localhost:8080/video/', tokenStore().headers)
+            .then(response => {
+                if (response.data.length > 0) {
+                    this.productionComplete = true
+                }
+            })
+            .catch(error => console.log(error.response.data))
+
     }
 
 }
@@ -99,6 +110,15 @@ export default {
 a {
     text-decoration: none;
     color: inherit;
+}
+
+.blue {
+    color: #3aaaff
+}
+
+.complete {
+    background-color: #3aaaff;
+    color: white;
 }
 
 
