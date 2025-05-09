@@ -9,11 +9,9 @@
 </template>
 
 <script>
-
 export default {
     mounted() {
         this.$emit('notFound')
-        console.log("mounted")
     }
 }
 

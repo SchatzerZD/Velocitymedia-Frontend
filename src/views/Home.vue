@@ -10,10 +10,24 @@ import InvoicePreview from '@/components/InvoicePreview.vue';
 
 <template>
 
-    <Row v-if="loggedIn" class="container">
-        <Box @click="contract" :class="{ complete: contractComplete }">
+    <div class="project-dropdown-container" v-if="loggedIn && projects">
+        <select v-model="currentProjectId" @change="switchProject">
+            <option v-for="project in projects" :key="project.id" :value="project.id">
+                {{ project.name }}
+            </option>
+            <option disabled>────────────</option>
+            <option value="__new__">+ Opprett nytt prosjekt</option>
+        </select>
+    </div>
+
+
+    <Row v-if="loggedIn && currentProjectId && currentProject" class="container">
+
+        <Box :class="{ complete: contractComplete }" @click="toggleContractModal">
             <h2>KONTRAKT</h2>
         </Box>
+
+
 
         <div class="dots" :class="{ completeDots: contractComplete }">
             <span></span>
@@ -21,9 +35,9 @@ import InvoicePreview from '@/components/InvoicePreview.vue';
             <span></span>
         </div>
 
-        <RouterLink :to="{ name: 'Review' }">
+        <RouterLink :to="{ name: 'Review', query: { contractComplete: contractComplete } }">
             <Box>
-                <h2 :class="{ blue: !contractComplete }">GJENNOMGANG</h2>
+                <h2 :class="{ blue: !contractComplete }">PRODUKSJON</h2>
             </Box>
         </RouterLink>
 
@@ -33,51 +47,64 @@ import InvoicePreview from '@/components/InvoicePreview.vue';
             <span></span>
         </div>
 
-        <RouterLink to="/404">
-            <Box>
-                <h2 :class="{ blue: !reviewComplete }">FAKTURA</h2>
-            </Box>
-        </RouterLink>
+
+        <Box :class="{ complete: fakturaComplete }">
+            <h2 :class="{ blue: !reviewComplete }">FAKTURA</h2>
+        </Box>
+
 
     </Row>
 
-    <div class="log-wrapper">
-        <Log maxLogs="3" />
+    <div v-if="loggedIn && currentProject && currentProjectId" class="log-wrapper">
+        <Log :projectId="currentProjectId" maxLogs=3 />
     </div>
 
-    <Modal v-if="showModal" @closeModal="toggleModal">
-        <div v-if="!contractComplete">
-            <h2>Opprett kontrakt og faktura</h2>
-            <form @submit.prevent="submitContract">
 
-                <label>Navn</label>
-                <input type="text" v-model="formData.customerName" required>
+    <Modal theme="large" v-if="showContractModal" @closeModal="toggleContractModal">
+        <div class="contract-modal">
+            <h2>Kontrakt</h2>
+            <object :data="'/media/contracts/' + contractFileName" type="application/pdf" width="100%" height="70vh"
+                style="margin-top: 1rem;"></object>
 
-                <label>Email</label>
-                <input type="email" v-model="formData.customerEmail" required>
+            <div v-if="showSignaturePad && !contractComplete" class="signature-pad-container">
+                <h3>Signer kontrakten her</h3>
+                <canvas ref="signaturePadCanvas" width="400" height="200"></canvas>
+                <div class="signature-buttons">
+                    <button @click="submitSignature">Send inn signatur</button>
+                    <button @click="clearSignature">Tøm feltet</button>
+                </div>
+            </div>
 
-                <label>Adresse</label>
-                <input type="text" placeholder="Gateadresse" v-model="formData.address.streetAddress" required>
-                <input type="text" placeholder="Postnummer" v-model="formData.address.postCode" required>
-                <input type="text" placeholder="By" v-model="formData.address.city" required>
-                <input type="text" placeholder="Land" v-model="formData.address.country" required>
 
-                <button type="submit">Send</button>
+            <div v-if="contractFound && !showSignaturePad && !contractComplete" class="modal-actions">
+                <button @click="startSignature">Signer</button>
+                <button @click="signContract(false)">Avslå</button>
+            </div>
+        </div>
+    </Modal>
+
+
+
+
+    <Modal v-if="newProject && loggedIn"
+        @closeModal="newProject = false; currentProjectId = null; tokenStore().changeProjectId('')">
+        <div class="new-project-container">
+            <h2>Opprett nytt prosjekt</h2>
+            <form @submit.prevent="createNewProject">
+                <label>Prosjekt Navn</label>
+                <input type="text" v-model="newProjectName" required>
+
+                <button type="submit">Oprett prosjekt</button>
             </form>
         </div>
-        <div v-else>
-            <h2>Faktura opprettet</h2>
-            <p>
-                <a :href="invoiceLink" target="_blank">Klikk her for å se fakturaen på Fiken.no</a>
-            </p>
-            <InvoicePreview :invoice="invoiceBody"></InvoicePreview>
-        </div>
+
     </Modal>
 
 
 </template>
 
 <script>
+import SignaturePad from 'signature_pad';
 
 
 export default {
@@ -88,9 +115,16 @@ export default {
             showModal: false,
             accessToken: null,
 
+            newProject: false,
+            newProjectName: '',
+            projects: null,
+            currentProject: null,
+            currentProjectId: null,
+
             contractComplete: false,
             reviewComplete: false,
             fakturaComplete: false,
+            contractFound: false,
 
             formData: {
                 accessToken: '',
@@ -104,51 +138,134 @@ export default {
                     country: ''
                 }
             },
+
             invoiceLink: null,
-            invoiceBody: null
+            invoiceBody: null,
+
+            showContractModal: false,
+            contractFileName: '',
+
+            showSignaturePad: false,
+            signaturePad: null,
+            signatureDataUrl: null
 
         }
     },
     methods: {
-        contract() {
-            if ((this.$router.isReady() && !this.$route.query.code && !this.$route.query.state)) {
-                const firstResult = Math.random().toString(36).substring(2, 12);
-                const secondResult = Math.random().toString(36).substring(2, 12);
-                window.location.href = `https://fiken.no/oauth/authorize?response_type=code&client_id=q35jROmqSY4sdSxn23685689881289974&redirect_uri=http://localhost:5173&state=${firstResult + secondResult}`
-            } else if (tokenStore().user.invoiceId) {
+        async createNewProject() {
+            await axios.post('http://localhost:8080/user/projects', {
 
-                axios.get("http://localhost:8080/fiken/get-contract/" + tokenStore().user.invoiceId, {
-                    headers: {
-                        "Authorization": "Bearer " + this.accessToken
-                    }
+                name: this.newProjectName
+            },
+                tokenStore().headers)
+                .then(response => {
+                    this.newProject = false
+                    this.projects = response.data.sort((a, b) => new Date(b.projectCreatedAt) - new Date(a.projectCreatedAt))
+                    this.currentProjectId = this.projects[0].id
+                    this.currentProject = this.projects[0]
+                    this.currentProject.contractPath ? this.contractFileName = this.currentProject.contractPath.split('\\').pop() : this.contractFileName = ''
+                    this.contractFileName ? this.contractFound = true : this.contractFound = false
+                    this.newProjectName = ''
+                    this.contractComplete = false
+                    tokenStore().changeProjectId(this.currentProjectId)
                 })
-                    .then(response => {
-                        this.invoiceBody = response.data
-                        this.invoiceLink = "https://fiken.no/foretak/fiken-demo-gammel-burger-as/webfaktura/" + tokenStore().user.invoiceId;
-                        this.toggleModal()
-                    })
-                    .catch(error => console.log(error))
-
-
+                .catch(error => console.log(error))
+        },
+        switchProject() {
+            if (this.currentProjectId === '__new__') {
+                tokenStore().changeProjectId('')
+                this.newProject = true;
+                this.currentProject = null;
             } else {
-                this.toggleModal()
+                tokenStore().changeProjectId(this.currentProjectId);
+                this.currentProject = this.projects.find(
+                    project => project.id === this.currentProjectId
+                );
+
+                this.currentProject.contractPath ? this.contractFileName = this.currentProject.contractPath.split('\\').pop() : this.contractFileName = ''
+                this.contractFileName ? this.contractFound = true : this.contractFound = false
+                this.contractComplete = this.currentProject.contractSigned
             }
         },
-        toggleModal() {
-            this.showModal = !this.showModal
+        toggleContractModal() {
+            this.showContractModal = !this.showContractModal;
         },
-        submitContract() {
-            this.formData.accessToken = this.accessToken
-            axios.post('http://localhost:8080/fiken/create-contract', this.formData, tokenStore().headers)
+
+        signContract(signed) {
+            if (!signed) {
+                alert("Kontrakt ble avslått.");
+                this.toggleContractModal();
+                return;
+            }
+
+            axios.post('http://localhost:8080/user/contract/' + this.currentProjectId + '?signed=true', null, tokenStore().headers)
                 .then(res => {
-                    this.invoiceLink = res.data.invoiceUrl;
-                    this.invoiceBody = res.data.content;
-                    this.contractComplete = true
+                    this.contractComplete = true;
+                    alert("Kontrakt signert!");
+                    this.toggleContractModal();
                 })
                 .catch(err => {
-                    console.error('Feil ved oppretting:', err);
-                    alert('Kunne ikke opprette kontrakt/faktura. Sjekk konsollen.');
+                    console.error("Feil ved signering:", err);
+                    alert("Det oppstod en feil. Sjekk konsollen.");
                 });
+        },
+        startSignature() {
+            this.showSignaturePad = true;
+            this.$nextTick(() => {
+                const canvas = this.$refs.signaturePadCanvas;
+                this.signaturePad = new SignaturePad(canvas);
+            });
+        },
+        clearSignature() {
+            if (this.signaturePad) {
+                this.signaturePad.clear();
+            }
+        },
+        submitSignature() {
+            if (this.signaturePad.isEmpty()) {
+                alert("Please provide a signature!");
+                return;
+            }
+            this.signatureDataUrl = this.signaturePad.toDataURL();
+
+            this.appendSignatureToPdf();
+        },
+        appendSignatureToPdf() {
+            const blob = this.dataURLtoBlob(this.signatureDataUrl);
+            const formData = new FormData();
+            formData.append("signature", blob, "signature.png");
+
+            axios.post(`http://localhost:8080/user/projects/${this.currentProjectId}/contract/signature`,
+                formData, {
+                headers: {
+                    "Authorization": "Bearer " + tokenStore().user.jwt,
+                    "Content-Type": "multipart/form-data"
+                }
+            })
+                .then(response => {
+                    this.signContract(true)
+                })
+                .catch(error => {
+                    console.error("Feil ved signering:", error);
+                    alert("Det oppstod en feil. Sjekk konsollen.");
+                });
+        }
+        ,
+        dataURLtoBlob(dataURL) {
+            const byteString = atob(dataURL.split(',')[1]);
+            const mimeString = dataURL.split(',')[0].split(':')[1].split(';')[0];
+
+            const ab = new ArrayBuffer(byteString.length);
+            const ia = new Uint8Array(ab);
+            for (let i = 0; i < byteString.length; i++) {
+                ia[i] = byteString.charCodeAt(i);
+            }
+
+            return new Blob([ab], { type: mimeString });
+        },
+
+        toggleContractFound(found) {
+            this.contractFound = found
         }
 
     },
@@ -157,36 +274,29 @@ export default {
             this.loggedIn = true
         }
 
-        if (!tokenStore().user.invoiceId) {
-            axios.get('http://localhost:8080/user/me', tokenStore().headers)
-                .then(response => {
-                    tokenStore().changeAccountId(response.data.accountId)
-                    tokenStore().changeInvoiceId(response.data.invoiceId)
-                    if (response.data.accountId && response.data.invoiceId) {
-                        this.contractComplete = true
+        axios.get('http://localhost:8080/user/projects', tokenStore().headers)
+            .then(response => {
+                if (response.data.length === 0) {
+                    !tokenStore().user.admin && (this.newProject = true)
+                } else {
+                    this.projects = response.data.sort((a, b) => new Date(b.projectCreatedAt) - new Date(a.projectCreatedAt))
+                    if (tokenStore().user.projectId) {
+                        this.currentProjectId = tokenStore().user.projectId
+                        this.currentProject = this.projects.find(
+                            project => project.id === this.currentProjectId
+                        );
+                    } else {
+                        this.currentProjectId = this.projects[0].id
+                        this.currentProject = this.projects[0]
+                        tokenStore().changeProjectId(this.currentProjectId)
                     }
-                })
-                .catch(error => console.log(error))
-        } else {
-            this.contractComplete = true
-        }
 
-        if (this.$router.isReady()) {
-            if (this.$route.query.code && this.$route.query.state) {
-
-                axios.post('http://localhost:8080/fiken/token', {
-                    code: this.$route.query.code,
-                    redirect_uri: "http://localhost:5173",
-                    state: this.$route.query.state
-                }).then(res => {
-                    this.accessToken = res.data.access_token;
-
-                    this.contract()
-                });
-            }
-        }
-
-
+                    this.contractComplete = this.currentProject.contractSigned
+                    this.currentProject.contractPath ? this.contractFileName = this.currentProject.contractPath.split('\\').pop() : this.contractFileName = ''
+                    this.contractFileName ? this.contractFound = true : this.contractFound = false
+                }
+            })
+            .catch(error => console.log(error))
 
     }
 
@@ -307,6 +417,156 @@ button[type="submit"]:hover {
 .blue {
     color: #3aaaff
 }
+
+.project-dropdown-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+.project-dropdown-container select {
+    background-color: #1a1a1a;
+    color: white;
+    border: 2px solid #3aaaff;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    max-width: 300px;
+    text-align: center;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.project-dropdown-container select:focus {
+    outline: none;
+    border-color: #00bfff;
+    box-shadow: 0 0 10px rgba(0, 191, 255, 0.5);
+}
+
+.modal-actions button {
+    background-color: #3aaaff;
+    color: white;
+    font-weight: bold;
+    margin-right: 1rem;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.modal-actions button:hover {
+    background-color: #00bfff;
+}
+
+.contract-modal {
+    background-color: #1a1a1a;
+    color: white;
+    padding: 2rem;
+    border-radius: 12px;
+    max-width: 90vw;
+    width: 100%;
+    height: 90vh;
+    overflow: auto;
+}
+
+.contract-modal h2 {
+    font-size: 1.5rem;
+    color: #3aaaff;
+    margin-bottom: 1rem;
+}
+
+.contract-modal object {
+    border: 2px solid #3aaaff;
+    border-radius: 8px;
+    height: 70vh;
+}
+
+.contract-modal .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+}
+
+.log-wrapper {
+    opacity: 0;
+    animation: fadeIn 0.5s ease forwards;
+}
+
+.new-project-container {
+    padding: 2rem;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+
+.container {
+    transform: scale(0);
+    animation: zoomOut 0.5s ease forwards;
+}
+
+.signature-pad-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+canvas {
+    border: 2px solid #3aaaff;
+    border-radius: 8px;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 191, 255, 0.2);
+}
+
+.signature-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.signature-buttons button {
+    background-color: #3aaaff;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    padding: 0.6rem 1.2rem;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.signature-buttons button:hover {
+    background-color: #00bfff;
+    box-shadow: 0 0 12px rgba(0, 191, 255, 0.6);
+}
+
+
+
+@keyframes zoomOut {
+    from {
+        transform: scale(2);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+
 
 @media(max-width:750px) {
     .row {

@@ -4,36 +4,46 @@ import Box from '../components/Box.vue';
 import Log from './tools/Log.vue';
 import { tokenStore } from '@/stores/tokenStore';
 import axios from 'axios';
+import { useRoute } from 'vue-router';
 
 </script>
 
 <template>
 
     <Row v-if="loggedIn" class="container">
+
+        <RouterLink to="/">
+            <div class="dots" :class="{ completeDots: contractComplete }">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </RouterLink>
+
         <RouterLink to="/BTS">
             <Box :class="{ complete: productionComplete }">
-                <h2>PRODUKSJON</h2>
+                <h2>FILMING</h2>
             </Box>
         </RouterLink>
 
-        <div class="dots">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
+        <template v-for="flag in videoFlags" :key="flag">
+            <div class="dots">
+                <span></span><span></span><span></span>
+            </div>
+            <RouterLink :to="{ name: 'Draft', query: { flag: flag } }">
+                <Box :class="{ complete: completedFlags.includes(flag) }">
+                    <h2 :class="{ blue: !completedFlags.includes(flag) }">{{ flag }}</h2>
+                </Box>
+            </RouterLink>
+        </template>
 
-        <RouterLink :to="{ name: 'Draft' }">
-            <Box>
-                <h2 :class="{ blue: !productionComplete }">KLIPPING</h2>
-            </Box>
+        <RouterLink to="/">
+            <div class="dots">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
         </RouterLink>
-
-        <div class="dots">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-
 
     </Row>
 
@@ -49,26 +59,34 @@ export default {
         return {
             loggedIn: false,
 
+            contractComplete: false,
+
             productionComplete: false,
             clippingComplete: false,
 
+            videoFlags: null,
+            completedFlags: []
 
         }
     },
-    async mounted() {
+    mounted() {
         if (tokenStore().user.jwt) {
-            this.loggedIn = true
+            this.loggedIn = true;
         }
 
-        await axios.get('http://localhost:8080/video/', tokenStore().headers)
-            .then(response => {
-                if (response.data.length > 0) {
-                    this.productionComplete = true
-                }
-            })
-            .catch(error => console.log(error.response.data))
+        const route = useRoute()
+        this.contractComplete = route.query.contractComplete === 'true'
 
+        axios.get(`http://localhost:8080/user/projects/${tokenStore().user.projectId}/flags`, tokenStore().headers)
+            .then(response => {
+                const backendFlags = response.data;
+
+                const enumOrder = ['CLIPPING', 'GRADING', 'VFX', 'SFX'];
+                this.videoFlags = enumOrder.filter(flag => backendFlags.includes(flag));
+            })
+            .catch(error => console.log(error));
     }
+
 
 }
 
@@ -120,6 +138,33 @@ a {
     background-color: #3aaaff;
     color: white;
 }
+
+.container {
+    transform: scale(0);
+    animation: zoomIn 0.5s ease forwards;
+}
+
+
+@keyframes zoomIn {
+    from {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.completeDots {
+    background-color: #3aaaff;
+    height: 50%;
+    border-radius: 100px;
+}
+
+
+
 
 
 @media(max-width:750px) {
