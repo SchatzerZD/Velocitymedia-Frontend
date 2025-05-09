@@ -25,6 +25,10 @@ export default {
         maxLogs: {
             type: Number,
             default: Infinity
+        },
+        projectId: {
+            type: Number,
+            default: null
         }
     },
     data() {
@@ -46,13 +50,24 @@ export default {
     async mounted() {
         this.loading = true;
         try {
-            const response = await axios.get('http://localhost:8080/log/', tokenStore().headers);
+            const response = await axios.get('http://localhost:8080/log/' + tokenStore().user.projectId, tokenStore().headers);
             this.logs = response.data.reverse();
         } catch (error) {
-            console.log(error.response.data);
+            console.log("Logs could not be retrieved: " + error);
         }
         this.loading = false;
     },
+    watch: {
+        projectId(newId, oldId) {
+            if (newId !== oldId) {
+                axios.get('http://localhost:8080/log/' + tokenStore().user.projectId, tokenStore().headers)
+                    .then(response => {
+                        this.logs = response.data.reverse();
+                    })
+                    .catch(error => console.log(error))
+            }
+        }
+    }
 };
 </script>
 

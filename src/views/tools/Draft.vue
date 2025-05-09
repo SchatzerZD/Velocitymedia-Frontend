@@ -5,17 +5,23 @@ import { tokenStore } from '@/stores/tokenStore';
 import Box from '../../components/Box.vue'
 import Modal from '@/components/Modal.vue';
 import Video from '@/components/Video.vue'
+import { useRoute } from 'vue-router';
+import { ArrowLeftIcon } from '@heroicons/vue/24/solid'
+
 </script>
 
 
 <template>
+
     <div v-if="load" class="container">
+
+
         <div class="selected-video">
             <div class="modal-video-wrapper">
                 <Video :timestamp="currentTime" :videoId="selectedVideoId" @goToTimestamp="setVideoTimestamp"
                     :videoName="selectedVideoName">
                     <video controls @timeupdate="updateTime($event)" id="selectedVideo">
-                        <source :src="'../../../media//videos/' + selectedVideoName" type="video/mp4" />
+                        <source :src="'/media/videos/' + selectedVideoName" type="video/mp4" />
                     </video>
                 </Video>
             </div>
@@ -29,8 +35,7 @@ import Video from '@/components/Video.vue'
             <div class="videos">
                 <div class="video-card" :class="{ selected: video.id === selectedVideoId }" v-for="video in videos"
                     :key="video.id" @click="selectVideo(video.id, video.videoName)">
-                    <img class="thumbnail"
-                        :src="'../../../media//videos/' + video.videoName.replace(/\.[^/.]+$/, '.jpg')"
+                    <img class="thumbnail" :src="'/media/videos/' + video.videoName.replace(/\.[^/.]+$/, '.jpg')"
                         alt="Video thumbnail" />
                     <div class="video-info">
                         <h3 class="video-title">{{ video.videoName }}</h3>
@@ -39,10 +44,19 @@ import Video from '@/components/Video.vue'
             </div>
 
             <div class="video-placeholder video-card">
-                <img src="../../../media//images/static/pluss.jpg" alt="Placeholder" />
+                <img src="/media/images/static/pluss.jpg" alt="Placeholder" />
                 <div class="video-info">
                     <h3 class="video-title">REVISJONER</h3>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div v-else>
+        <h3>INGEN VIDEOER LASTET OPP</h3>
+        <div class="back-button-wrapper">
+            <div class="back-button" @click="$router.go(-1)">
+                <ArrowLeftIcon class="icon" />
+                <span>Tilbake</span>
             </div>
         </div>
     </div>
@@ -99,16 +113,20 @@ export default {
     },
 
     async mounted() {
+        const route = useRoute()
 
-        await axios.get('http://localhost:8080/video/', tokenStore().headers)
+        await axios.get('http://localhost:8080/video/' + tokenStore().user.projectId + '/' + route.query.flag, tokenStore().headers)
             .then(response => {
                 this.videos = response.data
                 this.selectedVideoName = this.videos[0].videoName
                 this.selectedVideoId = this.videos[0].id
-                this.load = true
+
+                if (this.videos.length !== 0) {
+                    this.load = true
+                }
 
             })
-            .catch(error => console.log(error.response.data))
+            .catch(error => console.log(error.response))
 
     }
 
@@ -199,6 +217,7 @@ export default {
     color: #3390ff;
     text-align: left;
     margin: 0;
+    padding-top: 2rem;
 }
 
 .videos-wrapper {
@@ -250,6 +269,10 @@ export default {
     animation: fadeIn 0.5s ease forwards;
 }
 
+
+
+
+
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -258,5 +281,31 @@ export default {
     to {
         opacity: 1;
     }
+}
+
+.back-button-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.back-button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #3390ff;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.back-button:hover {
+    color: #1e70d7;
+    cursor: pointer;
+}
+
+.back-button .icon {
+    width: 24px;
+    height: 24px;
 }
 </style>
