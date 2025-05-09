@@ -7,7 +7,7 @@ import SignUp from './views/account/SignUp.vue';
 </script>
 
 <template>
-  <header>
+  <header v-if="$route.name !== 'NotFound'">
     <div class="navbar-container">
       <div class="user-info" v-if="!loggedOut">
         <h3>{{ username }}</h3>
@@ -15,17 +15,17 @@ import SignUp from './views/account/SignUp.vue';
 
       <nav>
         <div class="nav-links">
-          <RouterLink :to="{ name: 'Home' }">Home</RouterLink>
+          <RouterLink :to="{ name: 'Home' }">Hjem</RouterLink>
 
-          <RouterLink to="" @click="toggleModal" v-if="loggedOut">Log in</RouterLink>
+          <RouterLink to="" @click="toggleModal" v-if="loggedOut">Logg inn</RouterLink>
 
           <template v-else-if="!admin">
-            <RouterLink to="" @click="logOut">Log out</RouterLink>
+            <RouterLink to="" @click="logOut">Logg ut</RouterLink>
           </template>
 
           <template v-else>
             <RouterLink :to="{ name: 'Admin' }">Admin Tools</RouterLink>
-            <RouterLink to="" @click="logOut">Log out</RouterLink>
+            <RouterLink to="" @click="logOut">Logg ut</RouterLink>
           </template>
         </div>
       </nav>
@@ -68,6 +68,7 @@ export default {
       tokenStore().changeUsername("")
       tokenStore().changeAccountId("")
       tokenStore().changeInvoiceId("")
+      tokenStore().changeProjectId("")
       window.location.replace("http://localhost:5173/")
     },
     toggleModal() {

@@ -79,6 +79,7 @@ export default {
     display: flex;
     flex-direction: column;
     text-align: center;
+    padding: 2rem;
 }
 
 

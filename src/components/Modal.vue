@@ -5,7 +5,7 @@
                 <span id="closeButton" @click="closeModal">×</span>
             </div>
 
-            <div class="modal-content">
+            <div class="modal-content" :class="{ large: theme === 'large' }">
                 <slot></slot>
             </div>
         </div>
@@ -41,7 +41,6 @@ export default {
     background-color: white;
     color: black;
     border-radius: 16px;
-    padding: 2rem;
     max-width: 90vw;
     max-height: 90vh;
     overflow: auto;
@@ -88,5 +87,9 @@ export default {
     align-items: center;
     justify-content: center;
     text-align: center;
+}
+
+.large {
+    width: 50vw;
 }
 </style>
