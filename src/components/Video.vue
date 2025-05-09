@@ -1,15 +1,21 @@
 <script setup>
 import { ArrowDownTrayIcon } from '@heroicons/vue/24/outline'
+import { ArrowLeftIcon } from '@heroicons/vue/24/solid'
 </script>
 
 
 <template>
     <div class="video-header">
-        <div class="video-title">
-            <ArrowDownTrayIcon class="upload-icon" />
-            <h3>{{ videoName }}</h3>
+        <div class="back-button-wrapper">
+            <div class="back-button" @click="$router.go(-1)">
+                <ArrowLeftIcon class="icon" />
+                <span>Tilbake</span>
+            </div>
         </div>
-        <h3 id="comment-header">KOMMENTARER</h3>
+        <div>
+            <h3 id="comment-header">KOMMENTARER</h3>
+        </div>
+
     </div>
 
     <div class="video-container">
@@ -30,13 +36,19 @@ import { ArrowDownTrayIcon } from '@heroicons/vue/24/outline'
 
             <div class="under-video">
                 <p class="timestamp">{{ timestamp.toFixed(2) }}s</p>
-                <input type="text" placeholder="Add a comment with the current timestamp..." class="comment-input"
-                    v-model="commentText" />
+                <input type="text" placeholder="Legg til kommentar..." class="comment-input" v-model="commentText" />
                 <button :class="{ 'active': commentText.length > 0 }" :disabled="commentText.length === 0"
-                    class="comment-btn" @click="comment">Comment</button>
+                    class="comment-btn" @click="comment">Kommenter</button>
             </div>
         </div>
     </div>
+    <div class="video-title">
+        <a :href="'/media/videos/' + videoName" :download="videoName" class="download-link">
+            <ArrowDownTrayIcon class="upload-icon" />
+        </a>
+        <h3>{{ videoName }}</h3>
+    </div>
+
 </template>
 
 
@@ -106,14 +118,13 @@ export default {
 .video-container {
     display: flex;
     flex-direction: row;
-    gap: 7rem;
-    background-color: #000;
+    gap: 5rem;
+    background-color: #000000;
     padding: 2rem;
     border-radius: 10px;
     color: white;
     max-width: 100%;
-    padding-top: 0;
-    padding-bottom: 0;
+    padding-bottom: 1rem;
 }
 
 .video {
@@ -242,16 +253,19 @@ h3 {
 
 .video-header {
     display: flex;
-    justify-content: space-between;
+    flex-direction: row;
+    display: flex;
     align-items: center;
+    text-align: center;
+    justify-content: space-between;
     padding: 0 4rem;
-    margin-bottom: 1rem;
 }
 
 .video-title {
     display: flex;
     align-items: center;
     gap: 0.7rem;
+    padding-left: 2rem;
 }
 
 .upload-icon {
@@ -262,15 +276,38 @@ h3 {
 
 h3#comment-header {
     color: #3390ff;
-    margin: 0;
-    margin-right: 5.8rem;
+
 }
 
-@media(max-width: 1735px) {
-    h3#comment-header {
-        color: #3390ff;
-        margin: 0;
-        margin-right: 3.4rem;
-    }
+.back-button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #3390ff;
+    font-weight: 500;
+    margin: 1rem 0;
+    transition: color 0.3s ease;
+    width: 5rem;
+}
+
+.back-button:hover {
+    color: #1e70d7;
+    cursor: pointer;
+}
+
+.back-button .icon {
+    width: 24px;
+    height: 24px;
+}
+
+.download-link {
+    display: flex;
+    align-items: center;
+    color: white;
+    transition: color 0.3s ease;
+}
+
+.download-link:hover .upload-icon {
+    color: #3390ff;
 }
 </style>

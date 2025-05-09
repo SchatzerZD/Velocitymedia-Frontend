@@ -2,32 +2,42 @@
 import { tokenStore } from '@/stores/tokenStore';
 import axios from 'axios';
 import Modal from '@/components/Modal.vue';
+import { ArrowLeftIcon } from '@heroicons/vue/24/solid'
 </script>
 
 <template>
     <div class="bts-container">
-        <div v-if="loading" class="loading-screen">
-            <h1>Loading behind the scenes...</h1>
-        </div>
 
-        <div v-else>
+
+        <div v-if="images.length !== 0">
             <h1 class="page-title">Behind the Scenes</h1>
             <div class="gallery-wrapper">
                 <div class="image-grid">
                     <div v-for="image in images" :key="image.id" class="image-tile" @click="selectImage(image)">
-                        <img loading="lazy" :src="'../../../media/images/' + getImageName(image.imagePath)"
+                        <img loading="lazy" :src="'/media/images/' + getImageName(image.imagePath)"
                             :alt="getImageName(image.imagePath)" />
                     </div>
                 </div>
             </div>
         </div>
+
+        <div v-else>
+            <h3>INGEN BILDER LASTET OPP</h3>
+            <div class="back-button-wrapper">
+                <div class="back-button" @click="$router.go(-1)">
+                    <ArrowLeftIcon class="icon" />
+                    <span>Tilbake</span>
+                </div>
+            </div>
+        </div>
+
     </div>
 
 
     <Modal v-if="showModal" @closeModal="toggleModal" theme="black">
         <div class="modal-image-container">
             <button class="nav-arrow left" @click.stop="showPrevImage">&#10094;</button>
-            <img :src="'../../../media/images/' + getImageName(selectedImage.imagePath)"
+            <img :src="'/media/images/' + getImageName(selectedImage.imagePath)"
                 :alt="getImageName(selectedImage.imagePath)" />
             <button class="nav-arrow right" @click.stop="showNextImage">&#10095;</button>
         </div>
@@ -47,7 +57,6 @@ export default {
     data() {
         return {
             images: [],
-            loading: false,
             showModal: false,
             selectedImage: null
         }
@@ -80,14 +89,13 @@ export default {
 
     },
     async mounted() {
-        this.loading = true
-        await axios.get('http://localhost:8080/image/', tokenStore().headers)
+        await axios.get('http://localhost:8080/image/' + tokenStore().user.projectId, tokenStore().headers)
             .then(response => {
                 this.images = response.data
-                console.log(this.images)
             })
             .catch(error => console.log(error.response.data))
-        this.loading = false
+
+        console.log(this.images)
     }
 
 }
@@ -223,6 +231,33 @@ export default {
     to {
         opacity: 1;
     }
+}
+
+
+.back-button-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.back-button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #3390ff;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.back-button:hover {
+    color: #1e70d7;
+    cursor: pointer;
+}
+
+.back-button .icon {
+    width: 24px;
+    height: 24px;
 }
 
 
