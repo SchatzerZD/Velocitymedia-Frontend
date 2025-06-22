@@ -30,3 +30,4 @@ coverage
 *.tsbuildinfo
 
 /public/media/
+!/public/media/images/static/pluss.jpg

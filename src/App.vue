@@ -9,8 +9,8 @@ import SignUp from './views/account/SignUp.vue';
 <template>
   <header v-if="$route.name !== 'NotFound'">
     <div class="navbar-container">
-      <div class="user-info" v-if="!loggedOut">
-        <h3>{{ username }}</h3>
+      <div class="user-info">
+        <h3 v-if="!loggedOut">{{ username }}</h3>
       </div>
 
       <nav>

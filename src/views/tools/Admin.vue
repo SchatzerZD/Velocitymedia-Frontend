@@ -98,6 +98,31 @@ import { tokenStore } from '@/stores/tokenStore';
             </div>
         </div>
 
+        <div class="invoice-section" v-if="selectedProjectId">
+            <h2>Fakturautkast</h2>
+
+            <div v-if="invoiceDraftUrl">
+                <p>Fakturautkast er generert.</p>
+
+                <form @submit.prevent="updateProjectUrl">
+                    <input type="text" v-model="invoiceDraftUrl">
+                    <button type="submit">Oppdater Ferdig Faktura Link</button>
+                </form>
+
+            </div>
+
+            <div v-else-if="showInvoiceForm">
+                <form @submit.prevent="createInvoiceDraft">
+                    <button type="submit">Generer fakturautkast</button>
+                </form>
+            </div>
+
+            <div v-else>
+                <p>Ingen fakturainformasjon tilgjengelig.</p>
+            </div>
+        </div>
+
+
     </div>
 </template>
 
@@ -123,7 +148,11 @@ export default {
             selectedProjectFlags: [],
             uploadingMessage: '',
             uploadSuccessMessage: '',
-            uploadErrorMessage: ''
+            uploadErrorMessage: '',
+
+            invoiceDraftUrl: null,
+            showInvoiceForm: false,
+
 
 
         };
@@ -283,7 +312,61 @@ export default {
         },
         onContractFileChange(e) {
             this.contract = e.target.files[0];
-        }
+        },
+
+        async fetchInvoiceDraft() {
+            if (!this.selectedProjectId) return alert("Velg et prosjekt først");
+
+            try {
+                const res = await axios.get(`http://localhost:8080/user/projects/admin/project/${this.selectedProjectId}`, tokenStore().headers);
+                this.invoiceDraftUrl = res.data.invoiceURL;
+                if (this.invoiceDraftUrl) {
+                    this.showInvoiceForm = false;
+                } else {
+                    this.showInvoiceForm = true;
+                }
+            } catch (err) {
+                console.error(err);
+                alert("Feil ved henting av fakturautkast");
+            }
+        },
+
+        async updateProjectUrl() {
+            const body = {
+                url: this.invoiceDraftUrl
+            }
+
+            axios.post(`http://localhost:8080/fiken/update-url/${this.selectedProjectId}`, body, tokenStore().headers)
+                .then(response => {
+                    this.invoiceDraftUrl = response.data
+                    alert("Link oppdatert")
+                })
+                .catch(error => alert("Noe gikk galt"))
+        },
+
+        async createInvoiceDraft() {
+            if (!this.selectedProjectId) return alert("Velg et prosjekt først");
+
+            const selectedUserObj = this.users.find(user => user.id === this.selectedUser);
+            const selectedProject = this.userProjects.find(project => project.id === this.selectedProjectId)
+            const body = {
+                customerName: selectedUserObj.username,
+                contractText: selectedProject.name
+            };
+
+
+            try {
+                const res = await axios.post(`http://localhost:8080/fiken/create-contract/${this.selectedProjectId}`, body, tokenStore().headers);
+                console.log(res.data)
+                this.invoiceDraftUrl = res.data.invoiceURL;
+                this.showInvoiceForm = false;
+                alert("Fakturautkast opprettet!");
+            } catch (err) {
+                console.error(err);
+                alert("Feil ved oppretting av fakturautkast");
+            }
+        },
+
     },
     mounted() {
         axios.get('http://localhost:8080/user/', tokenStore().headers)
@@ -296,11 +379,16 @@ export default {
         selectedProjectId(newProjectId) {
             if (newProjectId) {
                 this.fetchProjectFlags(newProjectId);
+                this.fetchInvoiceDraft();
             } else {
                 this.selectedProjectFlags = [];
+                this.invoiceDraftUrl = null;
+                this.showInvoiceForm = false;
             }
         }
-    },
+    }
+
+
 
 };
 
@@ -316,6 +404,7 @@ export default {
     border-radius: 16px;
     box-shadow: 0 0 16px rgba(0, 191, 255, 0.2);
     color: white;
+    min-height: 100vh;
 }
 
 h1 {
@@ -471,6 +560,7 @@ select:focus {
     border-radius: 8px;
     resize: vertical;
     min-height: 200px;
+    margin-left: -1.7%
 }
 
 .log-entry-section button {
@@ -580,6 +670,40 @@ select:focus {
 
 .upload-error-message {
     color: #ff5555;
+}
+
+.invoice-section {
+    margin-top: 3rem;
+    padding: 1.5rem;
+    border: 2px solid #3aaaff;
+    border-radius: 12px;
+    background-color: #2a2a2a;
+    color: white;
+}
+
+.invoice-section label {
+    display: block;
+    margin-top: 0.75rem;
+    margin-bottom: 0.25rem;
+    font-weight: bold;
+    color: #3aaaff;
+}
+
+.invoice-section button {
+    margin-top: 1rem;
+    padding: 0.75rem 1.5rem;
+    background-color: #3aaaff;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.invoice-section button:hover {
+    background-color: #00bfff;
+    box-shadow: 0 0 12px rgba(0, 191, 255, 0.4);
 }
 
 

@@ -10,9 +10,7 @@
 
         <main class="main-content">
             <div v-if="selectedUser && selectedProject">
-                <!-- You can create separate components for content: e.g., ProjectDetails.vue -->
                 <h2>Project: {{ selectedProject.name }}</h2>
-                <!-- Placeholders for future components -->
                 <p>Upload videos/images/logs/contracts here.</p>
                 <button>Flag Project</button>
                 <button>Flag Video</button>

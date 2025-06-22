@@ -48,8 +48,8 @@ import InvoicePreview from '@/components/InvoicePreview.vue';
         </div>
 
 
-        <Box :class="{ complete: fakturaComplete }">
-            <h2 :class="{ blue: !reviewComplete }">FAKTURA</h2>
+        <Box :class="{ complete: fakturaComplete }" @click="redirecttToInvoice">
+            <h2 :class="{ blue: !fakturaComplete }">FAKTURA</h2>
         </Box>
 
 
@@ -140,7 +140,6 @@ export default {
             },
 
             invoiceLink: null,
-            invoiceBody: null,
 
             showContractModal: false,
             contractFileName: '',
@@ -185,6 +184,8 @@ export default {
                 this.currentProject.contractPath ? this.contractFileName = this.currentProject.contractPath.split('\\').pop() : this.contractFileName = ''
                 this.contractFileName ? this.contractFound = true : this.contractFound = false
                 this.contractComplete = this.currentProject.contractSigned
+                this.invoiceLink = this.currentProject.invoiceURL
+                this.invoiceLink ? this.fakturaComplete = true : this.fakturaComplete = false
             }
         },
         toggleContractModal() {
@@ -266,6 +267,9 @@ export default {
 
         toggleContractFound(found) {
             this.contractFound = found
+        },
+        redirecttToInvoice() {
+            window.open(this.invoiceLink)
         }
 
     },
@@ -294,6 +298,8 @@ export default {
                     this.contractComplete = this.currentProject.contractSigned
                     this.currentProject.contractPath ? this.contractFileName = this.currentProject.contractPath.split('\\').pop() : this.contractFileName = ''
                     this.contractFileName ? this.contractFound = true : this.contractFound = false
+                    this.invoiceLink = this.currentProject.invoiceURL
+                    this.invoiceLink ? this.fakturaComplete = true : this.fakturaComplete = false
                 }
             })
             .catch(error => console.log(error))
