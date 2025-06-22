@@ -7,33 +7,38 @@ import SignUp from './views/account/SignUp.vue';
 </script>
 
 <template>
-  <header>
-    <div v-if="!loggedOut">
-      <h3>{{ username }}</h3>
-    </div>
+  <header v-if="$route.name !== 'NotFound'">
     <div class="navbar-container">
+      <div class="user-info">
+        <h3 v-if="!loggedOut">{{ username }}</h3>
+      </div>
+
       <nav>
         <div class="nav-links">
-          <RouterLink :to="{ name: 'Home' }">Home</RouterLink>
-          <RouterLink to="" @click="toggleModal" v-if="loggedOut">Log in</RouterLink>
-          <div v-else-if="!admin" class="nav-links">
-            <RouterLink :to="{ name: 'BTS' }">BTS</RouterLink>
-            <RouterLink :to="{ name: 'Log' }">Log</RouterLink>
-            <RouterLink :to="{ name: 'Draft' }">Draft</RouterLink>
-            <RouterLink to="" @click="logOut">Log out</RouterLink>
-          </div>
-          <div v-else class="nav-links">
-            <RouterLink :to="{ name: 'Admin' }">Admin Tools</RouterLink>
-            <RouterLink to="" @click="logOut">Log out</RouterLink>
-          </div>
-        </div>
+          <RouterLink :to="{ name: 'Home' }">Hjem</RouterLink>
 
+          <RouterLink to="" @click="toggleModal" v-if="loggedOut">Logg inn</RouterLink>
+
+          <template v-else-if="!admin">
+            <RouterLink to="" @click="logOut">Logg ut</RouterLink>
+          </template>
+
+          <template v-else>
+            <RouterLink :to="{ name: 'Admin' }">Admin Tools</RouterLink>
+            <RouterLink to="" @click="logOut">Logg ut</RouterLink>
+          </template>
+        </div>
       </nav>
     </div>
-
   </header>
 
+
+
+  <h1>VELOCITY <span>FLOW</span></h1>
+
   <RouterView />
+
+
 
   <Modal v-if="showModal" @closeModal="toggleModal">
     <Login @register="toggleRegister" v-if="!register"></Login>
@@ -61,6 +66,9 @@ export default {
     logOut() {
       tokenStore().changeJWT("")
       tokenStore().changeUsername("")
+      tokenStore().changeAccountId("")
+      tokenStore().changeInvoiceId("")
+      tokenStore().changeProjectId("")
       window.location.replace("http://localhost:5173/")
     },
     toggleModal() {
@@ -82,103 +90,44 @@ export default {
 }
 
 </script>
-
 <style scoped>
+header {
+  background-color: #000;
+  padding: 1rem 2rem;
+  border-bottom: 2px solid #3aaaff;
+}
+
 .navbar-container {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
-  max-width: 1200px;
-  margin: 0 auto;
-  margin-right: 3rem;
-  position: relative;
 }
 
-header {
-  background: linear-gradient(135deg, #343450, #1a1a2e, #23234d);
-  padding: 16px 1.5rem;
-  border-bottom: 1px solid rgb(255, 255, 255);
-  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  display: flex;
-  flex-wrap: wrap;
-  border-radius: 12px;
-  width: 96%;
-  margin: 1rem auto;
-  backdrop-filter: blur(8px);
-  background-clip: padding-box;
-  color: #f5f5f5;
-}
-
-nav {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  text-align: right;
-  flex-grow: 1;
-}
-
-h3 {
-  font-size: 25px;
+.user-info h3 {
+  color: #3aaaff;
   font-weight: 600;
-  color: #f5f5f5;
-  margin: 0 1rem 0 0;
-  padding: 8px 12px;
+  margin: 0;
 }
 
 .nav-links {
   display: flex;
-  gap: 20px;
+  gap: 1.5rem;
   align-items: center;
 }
 
 nav a {
+  color: white;
+  font-weight: 700;
   text-decoration: none;
-  color: #bfc9ff;
-  font-weight: 500;
-  font-size: 15px;
-  padding: 8px 16px;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-  background-color: transparent;
+  padding: 0.5rem 1rem;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  transition: all 0.2s ease;
 }
 
 nav a:hover {
-  background: linear-gradient(135deg, #5b86e5, #36d1dc);
-  color: #ffffff;
-  box-shadow: 0 0 8px rgba(86, 204, 242, 0.3);
-}
-
-nav a.router-link-exact-active {
-  font-weight: 600;
-  color: #ffffff;
-  background-color: #36d1dc33;
-  border: 1px solid rgba(86, 204, 242, 0.3);
-}
-
-@media (max-width: 768px) {
-  .navbar-container {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  nav {
-    width: 100%;
-    margin-top: 10px;
-    justify-content: flex-start;
-  }
-
-  .navLinks {
-    flex-direction: column;
-    gap: 12px;
-    width: 100%;
-  }
-
-  h3 {
-    margin-bottom: 10px;
-  }
+  border-color: #3aaaff;
+  background-color: rgba(58, 170, 255, 0.1);
+  color: #3aaaff;
 }
 </style>

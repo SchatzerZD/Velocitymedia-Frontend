@@ -2,30 +2,42 @@
 import { tokenStore } from '@/stores/tokenStore';
 import axios from 'axios';
 import Modal from '@/components/Modal.vue';
+import { ArrowLeftIcon } from '@heroicons/vue/24/solid'
 </script>
 
 <template>
     <div class="bts-container">
-        <div v-if="loading" class="loading-screen">
-            <h1>Loading behind the scenes...</h1>
-        </div>
 
-        <div v-else>
+
+        <div v-if="images.length !== 0">
             <h1 class="page-title">Behind the Scenes</h1>
-            <div class="image-grid">
-                <div v-for="image in images" :key="image.id" class="image-tile" @click="selectImage(image)">
-                    <img :src="'../../../media/images/' + getImageName(image.imagePath)"
-                        :alt="getImageName(image.imagePath)" />
+            <div class="gallery-wrapper">
+                <div class="image-grid">
+                    <div v-for="image in images" :key="image.id" class="image-tile" @click="selectImage(image)">
+                        <img loading="lazy" :src="'/media/images/' + getImageName(image.imagePath)"
+                            :alt="getImageName(image.imagePath)" />
+                    </div>
                 </div>
             </div>
         </div>
+
+        <div v-else>
+            <h3>INGEN BILDER LASTET OPP</h3>
+            <div class="back-button-wrapper">
+                <div class="back-button" @click="$router.go(-1)">
+                    <ArrowLeftIcon class="icon" />
+                    <span>Tilbake</span>
+                </div>
+            </div>
+        </div>
+
     </div>
 
 
     <Modal v-if="showModal" @closeModal="toggleModal" theme="black">
         <div class="modal-image-container">
             <button class="nav-arrow left" @click.stop="showPrevImage">&#10094;</button>
-            <img :src="'../../../media/images/' + getImageName(selectedImage.imagePath)"
+            <img :src="'/media/images/' + getImageName(selectedImage.imagePath)"
                 :alt="getImageName(selectedImage.imagePath)" />
             <button class="nav-arrow right" @click.stop="showNextImage">&#10095;</button>
         </div>
@@ -45,7 +57,6 @@ export default {
     data() {
         return {
             images: [],
-            loading: false,
             showModal: false,
             selectedImage: null
         }
@@ -78,14 +89,13 @@ export default {
 
     },
     async mounted() {
-        this.loading = true
-        await axios.get('http://localhost:8080/image/', tokenStore().headers)
+        await axios.get('http://localhost:8080/image/' + tokenStore().user.projectId, tokenStore().headers)
             .then(response => {
                 this.images = response.data
-                console.log(this.images)
             })
             .catch(error => console.log(error.response.data))
-        this.loading = false
+
+        console.log(this.images)
     }
 
 }
@@ -96,116 +106,188 @@ export default {
 
 <style scoped>
 .bts-container {
-    padding: 2rem;
-    color: #f5f5f5;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    max-width: 1200px;
-    margin: 0 auto;
+    padding: 4rem 2rem;
+    color: white;
+    min-height: 100vh;
+    font-family: 'Arial', sans-serif;
+    padding-top: 0px;
 }
 
 .page-title {
     text-align: center;
+    font-size: 2.5rem;
     margin-bottom: 2rem;
-    font-size: 2rem;
-    color: #8ec5fc;
+    color: #3aaaff;
 }
 
 .loading-screen {
-    text-align: center;
-    font-size: 1.5rem;
-    color: #bfc9ff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+    color: #3aaaff;
 }
 
 .image-grid {
-    display: grid;
-    gap: 1.5rem;
+    column-count: 4;
+    column-gap: 1rem;
     padding: 1rem;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
 }
 
 .image-tile {
+    display: inline-block;
+    margin-bottom: 1rem;
+    width: 100%;
     border-radius: 12px;
     overflow: hidden;
+    border: 2px solid #3aaaff;
+    transition: transform 0.3s, box-shadow 0.3s;
     cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    background: #1a1a2e;
-    box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
-    max-height: 200px;
-}
-
-.image-tile:hover {
-    transform: scale(1.03);
-    box-shadow: 0 0 12px rgba(142, 197, 252, 0.6);
+    break-inside: avoid;
 }
 
 .image-tile img {
-    display: block;
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+    transition: transform 0.3s ease;
 }
 
-.modal-image-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    max-height: 80vh;
-    padding: 1rem;
+.image-tile:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 15px rgba(58, 170, 255, 0.5);
 }
 
-.modal-image-wrapper img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-    border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
-}
 
 .modal-image-container {
-    width: 65vw;
-    height: 70vh;
     position: relative;
+    width: 90vw;
+    max-width: 1000px;
+    height: 80vh;
+    margin: auto;
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: #0d0d0d;
     border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
-    margin: 0 auto;
+    padding: 1rem;
 }
-
 
 .modal-image-container img {
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
-    border-radius: 12px;
+    border-radius: 8px;
 }
 
 .nav-arrow {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background: rgba(255, 255, 255, 0.08);
+    font-size: 2.5rem;
+    background: none;
     border: none;
-    font-size: 2rem;
-    color: #ffffff;
-    padding: 0.5rem 1rem;
-    border-radius: 50%;
+    color: #3aaaff;
     cursor: pointer;
     z-index: 10;
-    transition: background 0.2s ease;
+    padding: 0 1rem;
+    transition: color 0.3s;
 }
 
 .nav-arrow:hover {
-    background: rgba(255, 255, 255, 0.15);
+    color: #00bfff;
 }
 
 .nav-arrow.left {
-    left: 1rem;
+    left: 0;
 }
 
 .nav-arrow.right {
-    right: 1rem;
+    right: 0;
+}
+
+.gallery-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.image-grid {
+    column-gap: 1.5rem;
+    padding: 1rem 0;
+}
+
+
+
+
+.image-tile {
+    opacity: 0;
+    animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+
+.back-button-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.back-button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #3390ff;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.back-button:hover {
+    color: #1e70d7;
+    cursor: pointer;
+}
+
+.back-button .icon {
+    width: 24px;
+    height: 24px;
+}
+
+
+
+@media (max-width: 768px) {
+    .modal-image-container {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .nav-arrow {
+        font-size: 2.5rem;
+    }
+}
+
+@media (max-width: 1200px) {
+    .image-grid {
+        column-count: 3;
+    }
+}
+
+@media (max-width: 900px) {
+    .image-grid {
+        column-count: 2;
+    }
+}
+
+@media (max-width: 600px) {
+    .image-grid {
+        column-count: 1;
+    }
 }
 </style>

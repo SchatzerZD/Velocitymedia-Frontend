@@ -13,19 +13,18 @@
 
 
 <style scoped>
-
-
-.row{
-    display:flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    flex: 0 0 33.3333%;
-    margin: 0 auto;
-    width: 66%;
-    margin-bottom: 15%;
-    gap: 5rem;
-    justify-content: center;
+.row {
+    opacity: 0;
+    animation: fadeIn 0.5s ease forwards;
 }
 
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
 
+    to {
+        opacity: 1;
+    }
+}
 </style>

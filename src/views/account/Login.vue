@@ -55,6 +55,8 @@ export default {
             console.log("login successful")
             tokenStore().changeJWT(jwt)
             tokenStore().changeUsername(this.user.username)
+
+
             window.location.replace("http://localhost:5173/")
         },
         register() {
@@ -76,6 +78,7 @@ export default {
     display: flex;
     flex-direction: column;
     text-align: center;
+    padding: 2rem;
 }
 
 h1 {

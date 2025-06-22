@@ -4,17 +4,17 @@
         <h1>404</h1>
         <h2>Page not found</h2>
     </div>
-    
+
 
 </template>
 
-<style scoped>
-
-.container{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+<script>
+export default {
+    mounted() {
+        this.$emit('notFound')
+    }
 }
 
-</style>
+</script>
+
+<style scoped></style>
