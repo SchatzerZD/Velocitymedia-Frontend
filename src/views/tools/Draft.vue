@@ -21,7 +21,8 @@ import { ArrowLeftIcon } from '@heroicons/vue/24/solid'
                 <Video :timestamp="currentTime" :videoId="selectedVideoId" @goToTimestamp="setVideoTimestamp"
                     :videoName="selectedVideoName">
                     <video controls @timeupdate="updateTime($event)" id="selectedVideo">
-                        <source :src="'/media/videos/' + selectedVideoName" type="video/mp4" />
+                        <source :src="videoUrl" type="video/mp4" />
+
                     </video>
                 </Video>
             </div>
@@ -77,6 +78,12 @@ export default {
             selectedVideoName: '',
             savedScrollTop: 0,
             load: false
+        }
+    },
+    computed: {
+        videoUrl() {
+            const backend = import.meta.env.VITE_BACKEND_URL;
+            return `${backend}/media/videos/${encodeURIComponent(this.selectedVideoName)}`;
         }
     },
     methods: {

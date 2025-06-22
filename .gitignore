@@ -31,3 +31,5 @@ coverage
 
 /public/media/
 !/public/media/images/static/pluss.jpg
+
+.env
