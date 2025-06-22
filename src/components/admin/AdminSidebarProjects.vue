@@ -36,7 +36,7 @@ export default {
             handler(newUser) {
                 if (newUser && newUser.id) {
                     axios
-                        .get(`http://localhost:8080/user/projects/admin/${newUser.id}`, tokenStore().headers)
+                        .get(`${import.meta.env.VITE_BACKEND_URL}/user/projects/admin/${newUser.id}`, tokenStore().headers)
                         .then((response) => {
                             this.projects = response.data
                             this.selectedProjectId = null

@@ -50,7 +50,7 @@ export default {
     async mounted() {
         this.loading = true;
         try {
-            const response = await axios.get('http://localhost:8080/log/' + tokenStore().user.projectId, tokenStore().headers);
+            const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/log/` + tokenStore().user.projectId, tokenStore().headers);
             this.logs = response.data.reverse();
         } catch (error) {
             console.log("Logs could not be retrieved: " + error);
@@ -60,7 +60,7 @@ export default {
     watch: {
         projectId(newId, oldId) {
             if (newId !== oldId) {
-                axios.get('http://localhost:8080/log/' + tokenStore().user.projectId, tokenStore().headers)
+                axios.get(`${import.meta.env.VITE_BACKEND_URL}/log/` + tokenStore().user.projectId, tokenStore().headers)
                     .then(response => {
                         this.logs = response.data.reverse();
                     })

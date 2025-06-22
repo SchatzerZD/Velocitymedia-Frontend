@@ -63,7 +63,7 @@ import InvoicePreview from '@/components/InvoicePreview.vue';
     <Modal theme="large" v-if="showContractModal" @closeModal="toggleContractModal">
         <div class="contract-modal">
             <h2>Kontrakt</h2>
-            <object :data="'/media/contracts/' + contractFileName" type="application/pdf" width="100%" height="70vh"
+            <object :data="contractUrl + contractFileName" type="application/pdf" width="100%" height="70vh"
                 style="margin-top: 1rem;"></object>
 
             <div v-if="showSignaturePad && !contractComplete" class="signature-pad-container">
@@ -150,9 +150,15 @@ export default {
 
         }
     },
+    computed: {
+        contractUrl() {
+            const backend = import.meta.env.VITE_BACKEND_URL;
+            return `${backend}${this.contractFileName}?t=${Date.now()}`;
+        }
+    },
     methods: {
         async createNewProject() {
-            await axios.post('http://localhost:8080/user/projects', {
+            await axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/projects`, {
 
                 name: this.newProjectName
             },
@@ -199,7 +205,7 @@ export default {
                 return;
             }
 
-            axios.post('http://localhost:8080/user/contract/' + this.currentProjectId + '?signed=true', null, tokenStore().headers)
+            axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/contract/` + this.currentProjectId + '?signed=true', null, tokenStore().headers)
                 .then(res => {
                     this.contractComplete = true;
                     alert("Kontrakt signert!");
@@ -236,7 +242,7 @@ export default {
             const formData = new FormData();
             formData.append("signature", blob, "signature.png");
 
-            axios.post(`http://localhost:8080/user/projects/${this.currentProjectId}/contract/signature`,
+            axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/projects/${this.currentProjectId}/contract/signature`,
                 formData, {
                 headers: {
                     "Authorization": "Bearer " + tokenStore().user.jwt,
@@ -278,7 +284,7 @@ export default {
             this.loggedIn = true
         }
 
-        axios.get('http://localhost:8080/user/projects', tokenStore().headers)
+        axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/projects`, tokenStore().headers)
             .then(response => {
                 if (response.data.length === 0) {
                     !tokenStore().user.admin && (this.newProject = true)

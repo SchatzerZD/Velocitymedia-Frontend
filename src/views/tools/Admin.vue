@@ -163,7 +163,7 @@ export default {
             this.userProjects = [];
 
             try {
-                const res = await axios.get(`http://localhost:8080/user/projects/admin/${this.selectedUser}`, tokenStore().headers);
+                const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/projects/admin/${this.selectedUser}`, tokenStore().headers);
                 this.userProjects = res.data.sort((a, b) => new Date(b.projectCreatedAt) - new Date(a.projectCreatedAt))
             } catch (err) {
                 console.error('Feil ved henting av prosjekter:', err);
@@ -185,7 +185,7 @@ export default {
             formData.append('flag', this.selectedFlag);
 
             try {
-                await axios.post(`http://localhost:8080/video/${this.selectedProjectId}`, formData, {
+                await axios.post(`${import.meta.env.VITE_BACKEND_URL}/video/${this.selectedProjectId}`, formData, {
                     headers: { "Authorization": "Bearer " + tokenStore().user.jwt }
                 });
                 this.uploadSuccessMessage = 'Video lastet opp!';
@@ -209,7 +209,7 @@ export default {
             const formData = new FormData();
             formData.append('file', this.image);
 
-            await axios.post(`http://localhost:8080/image/${this.selectedProjectId}`, formData, {
+            await axios.post(`${import.meta.env.VITE_BACKEND_URL}/image/${this.selectedProjectId}`, formData, {
                 headers: { "Authorization": "Bearer " + tokenStore().user.jwt }
             }).then(
                 this.uploadSuccessMessage = 'Bilde lastet opp!'
@@ -231,7 +231,7 @@ export default {
             this.uploadSuccessMessage = '';
             this.uploadErrorMessage = '';
 
-            await axios.post(`http://localhost:8080/log/${this.selectedProjectId}`, {
+            await axios.post(`${import.meta.env.VITE_BACKEND_URL}/log/${this.selectedProjectId}`, {
                 log: this.logText
             }, tokenStore().headers)
                 .then(
@@ -257,7 +257,7 @@ export default {
             const formData = new FormData();
             formData.append('file', this.contract);
 
-            await axios.post(`http://localhost:8080/user/projects/admin/contract/${this.selectedProjectId}`, formData, {
+            await axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/projects/admin/contract/${this.selectedProjectId}`, formData, {
                 headers: {
                     "Authorization": "Bearer " + tokenStore().user.jwt
                 }
@@ -281,7 +281,7 @@ export default {
 
             try {
                 await axios.post(
-                    `http://localhost:8080/user/projects/admin/${this.selectedProjectId}/flags`,
+                    `${import.meta.env.VITE_BACKEND_URL}/user/projects/admin/${this.selectedProjectId}/flags`,
                     this.selectedProjectFlags, tokenStore().headers);
                 alert("Prosjektflagg oppdatert!");
             } catch (err) {
@@ -291,7 +291,7 @@ export default {
         },
         async fetchProjectFlags(projectId) {
             try {
-                const res = await axios.get(`http://localhost:8080/user/projects/${projectId}/flags`, tokenStore().headers);
+                const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/projects/${projectId}/flags`, tokenStore().headers);
                 this.selectedProjectFlags = res.data || [];
             } catch (err) {
                 console.error("Feil ved henting av prosjektflagg:", err);
@@ -318,7 +318,7 @@ export default {
             if (!this.selectedProjectId) return alert("Velg et prosjekt først");
 
             try {
-                const res = await axios.get(`http://localhost:8080/user/projects/admin/project/${this.selectedProjectId}`, tokenStore().headers);
+                const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/projects/admin/project/${this.selectedProjectId}`, tokenStore().headers);
                 this.invoiceDraftUrl = res.data.invoiceURL;
                 if (this.invoiceDraftUrl) {
                     this.showInvoiceForm = false;
@@ -336,7 +336,7 @@ export default {
                 url: this.invoiceDraftUrl
             }
 
-            axios.post(`http://localhost:8080/fiken/update-url/${this.selectedProjectId}`, body, tokenStore().headers)
+            axios.post(`${import.meta.env.VITE_BACKEND_URL}/fiken/update-url/${this.selectedProjectId}`, body, tokenStore().headers)
                 .then(response => {
                     this.invoiceDraftUrl = response.data
                     alert("Link oppdatert")
@@ -356,7 +356,7 @@ export default {
 
 
             try {
-                const res = await axios.post(`http://localhost:8080/fiken/create-contract/${this.selectedProjectId}`, body, tokenStore().headers);
+                const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/fiken/create-contract/${this.selectedProjectId}`, body, tokenStore().headers);
                 console.log(res.data)
                 this.invoiceDraftUrl = res.data.invoiceURL;
                 this.showInvoiceForm = false;
@@ -369,7 +369,7 @@ export default {
 
     },
     mounted() {
-        axios.get('http://localhost:8080/user/', tokenStore().headers)
+        axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/`, tokenStore().headers)
             .then(response => {
                 this.users = response.data.filter(user => user.username !== 'admin');
             })

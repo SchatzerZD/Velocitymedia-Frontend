@@ -80,7 +80,7 @@ export default {
                 timestampInSeconds: this.timestamp
             }
 
-            axios.post('http://localhost:8080/video/' + this.videoId + '/comment', comment, tokenStore().headers)
+            axios.post(`${import.meta.env.VITE_BACKEND_URL}/video/` + this.videoId + '/comment', comment, tokenStore().headers)
                 .then(response => console.log(response))
                 .catch(error => console.log(error))
         },
@@ -89,7 +89,7 @@ export default {
         }
     },
     mounted() {
-        axios.get('http://localhost:8080/video/' + this.videoId + '/comment', tokenStore().headers)
+        axios.get(`${import.meta.env.VITE_BACKEND_URL}/video/` + this.videoId + '/comment', tokenStore().headers)
             .then(response => {
                 this.comments = response.data
             })
@@ -98,7 +98,7 @@ export default {
     watch: {
         videoId(newId, oldId) {
             if (newId !== oldId) {
-                axios.get(`http://localhost:8080/video/${newId}/comment`, tokenStore().headers)
+                axios.get(`${import.meta.env.VITE_BACKEND_URL}/video/${newId}/comment`, tokenStore().headers)
                     .then(response => {
                         this.comments = response.data
                     })

@@ -77,7 +77,7 @@ export default {
         const route = useRoute()
         this.contractComplete = route.query.contractComplete === 'true'
 
-        axios.get(`http://localhost:8080/user/projects/${tokenStore().user.projectId}/flags`, tokenStore().headers)
+        axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/projects/${tokenStore().user.projectId}/flags`, tokenStore().headers)
             .then(response => {
                 const backendFlags = response.data;
 

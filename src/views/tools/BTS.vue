@@ -14,7 +14,7 @@ import { ArrowLeftIcon } from '@heroicons/vue/24/solid'
             <div class="gallery-wrapper">
                 <div class="image-grid">
                     <div v-for="image in images" :key="image.id" class="image-tile" @click="selectImage(image)">
-                        <img loading="lazy" :src="'/media/images/' + getImageName(image.imagePath)"
+                        <img loading="lazy" :src="imageUrl + getImageName(image.imagePath)"
                             :alt="getImageName(image.imagePath)" />
                     </div>
                 </div>
@@ -37,8 +37,7 @@ import { ArrowLeftIcon } from '@heroicons/vue/24/solid'
     <Modal v-if="showModal" @closeModal="toggleModal" theme="black">
         <div class="modal-image-container">
             <button class="nav-arrow left" @click.stop="showPrevImage">&#10094;</button>
-            <img :src="'/media/images/' + getImageName(selectedImage.imagePath)"
-                :alt="getImageName(selectedImage.imagePath)" />
+            <img :src="imageUrl + getImageName(selectedImage.imagePath)" :alt="getImageName(selectedImage.imagePath)" />
             <button class="nav-arrow right" @click.stop="showNextImage">&#10095;</button>
         </div>
     </Modal>
@@ -59,6 +58,12 @@ export default {
             images: [],
             showModal: false,
             selectedImage: null
+        }
+    },
+    computed: {
+        imageUrl() {
+            const backend = import.meta.env.VITE_BACKEND_URL;
+            return `${backend}`;
         }
     },
     methods: {
@@ -89,7 +94,7 @@ export default {
 
     },
     async mounted() {
-        await axios.get('http://localhost:8080/image/' + tokenStore().user.projectId, tokenStore().headers)
+        await axios.get(`${import.meta.env.VITE_BACKEND_URL}/image/` + tokenStore().user.projectId, tokenStore().headers)
             .then(response => {
                 this.images = response.data
             })

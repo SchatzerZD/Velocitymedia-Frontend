@@ -31,7 +31,7 @@ export default {
         }
     },
     mounted() {
-        axios.get('http://localhost:8080/user/', tokenStore().headers)
+        axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/`, tokenStore().headers)
             .then(response => {
                 this.users = response.data.filter(user => user.username !== 'admin');
             })

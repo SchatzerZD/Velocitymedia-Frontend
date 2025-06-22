@@ -36,7 +36,7 @@ import { ArrowLeftIcon } from '@heroicons/vue/24/solid'
             <div class="videos">
                 <div class="video-card" :class="{ selected: video.id === selectedVideoId }" v-for="video in videos"
                     :key="video.id" @click="selectVideo(video.id, video.videoName)">
-                    <img class="thumbnail" :src="'/media/videos/' + video.videoName.replace(/\.[^/.]+$/, '.jpg')"
+                    <img class="thumbnail" :src="thumbnailUrl + video.videoName.replace(/\.[^/.]+$/, '.jpg')"
                         alt="Video thumbnail" />
                     <div class="video-info">
                         <h3 class="video-title">{{ video.videoName }}</h3>
@@ -84,6 +84,10 @@ export default {
         videoUrl() {
             const backend = import.meta.env.VITE_BACKEND_URL;
             return `${backend}/media/videos/${encodeURIComponent(this.selectedVideoName)}`;
+        },
+        thumbnailUrl() {
+            const backend = import.meta.env.VITE_BACKEND_URL;
+            return `${backend}/media/videos/`;
         }
     },
     methods: {
@@ -122,7 +126,7 @@ export default {
     async mounted() {
         const route = useRoute()
 
-        await axios.get('http://localhost:8080/video/' + tokenStore().user.projectId + '/' + route.query.flag, tokenStore().headers)
+        await axios.get(`${import.meta.env.VITE_BACKEND_URL}/video/` + tokenStore().user.projectId + '/' + route.query.flag, tokenStore().headers)
             .then(response => {
                 this.videos = response.data
                 this.selectedVideoName = this.videos[0].videoName
