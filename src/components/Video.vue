@@ -43,7 +43,7 @@ import { ArrowLeftIcon } from '@heroicons/vue/24/solid'
         </div>
     </div>
     <div class="video-title">
-        <a :href="'/media/videos/' + videoName" :download="videoName" class="download-link">
+        <a :href="videoUrl + videoName" :download="videoName" class="download-link">
             <ArrowDownTrayIcon class="upload-icon" />
         </a>
         <h3>{{ videoName }}</h3>
@@ -88,6 +88,13 @@ export default {
             this.$emit('goToTimestamp', timestamp)
         }
     },
+    computed: {
+        videoUrl() {
+            const backend = import.meta.env.VITE_BACKEND_URL;
+            return `${backend}/media/videos/`;
+        }
+    },
+
     mounted() {
         axios.get(`${import.meta.env.VITE_BACKEND_URL}/video/` + this.videoId + '/comment', tokenStore().headers)
             .then(response => {

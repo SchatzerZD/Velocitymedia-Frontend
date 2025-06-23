@@ -69,7 +69,7 @@ export default {
       tokenStore().changeAccountId("")
       tokenStore().changeInvoiceId("")
       tokenStore().changeProjectId("")
-      window.location.replace("http://localhost:5173/")
+      window.location.replace(window.location.origin + "/");
     },
     toggleModal() {
       this.register = false

@@ -300,7 +300,6 @@ export default {
 
         resetForm() {
             this.uploading = false;
-            this.selectedProjectId = null;
             this.selectedFlag = null;
             this.logText = '';
         },

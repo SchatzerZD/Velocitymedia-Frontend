@@ -46,7 +46,7 @@ export default {
     },
     methods: {
         async onSubmit() {
-            await axios.post('http://localhost:8080/user/', this.user)
+            await axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/`, this.user)
                 .then(response => this.register(response.data))
                 .catch(error => {
                     this.error = error.response.data
@@ -58,7 +58,8 @@ export default {
             tokenStore().changeUsername(this.user.username)
             tokenStore().changeAccountId("")
             tokenStore().changeInvoiceId("")
-            window.location.replace("http://localhost:5173/")
+            window.location.replace(window.location.origin + "/");
+
         },
         login() {
             this.$emit("login")
