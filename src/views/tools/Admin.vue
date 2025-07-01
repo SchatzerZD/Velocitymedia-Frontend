@@ -4,7 +4,16 @@ import { tokenStore } from '@/stores/tokenStore';
 </script>
 
 <template>
+
+
     <div class="admin-container">
+        <div class="top-of-container">
+            <RouterLink to="/adminDashboard">
+                <button>Advanced view</button>
+            </RouterLink>
+        </div>
+
+
         <h1>Admin Panel</h1>
 
         <div class="select-wrapper">
@@ -405,6 +414,27 @@ export default {
     color: white;
     min-height: 100vh;
 }
+
+.top-of-container {
+    display: flex;
+    justify-content: right;
+}
+
+.top-of-container button {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    background-color: #3aaaff;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-weight: bold;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.top-of-container button:hover {
+    cursor: pointer;
+}
+
 
 h1 {
     text-align: center;
