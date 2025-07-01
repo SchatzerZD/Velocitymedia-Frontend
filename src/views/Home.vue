@@ -198,33 +198,23 @@ export default {
             this.showContractModal = !this.showContractModal;
         },
 
-        async signContract(signed) {
+        signContract(signed) {
             if (!signed) {
                 alert("Kontrakt ble avslått.");
                 this.toggleContractModal();
                 return;
             }
 
-            try {
-                const ipResponse = await axios.get('https://api.ipify.org?format=json');
-                const userIp = ipResponse.data.ip;
-
-                const formData = new FormData();
-                formData.append("identifier", userIp);
-
-                await axios.post(
-                    `${import.meta.env.VITE_BACKEND_URL}/user/contract/` + this.currentProjectId,
-                    formData,
-                    tokenStore().headers
-                );
-
-                this.contractComplete = true;
-                alert("Kontrakt signert!");
-                this.toggleContractModal();
-            } catch (err) {
-                console.error("Feil ved signering:", err);
-                alert("Det oppstod en feil. Sjekk konsollen.");
-            }
+            axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/contract/` + this.currentProjectId, null, tokenStore().headers)
+                .then(res => {
+                    this.contractComplete = true;
+                    alert("Kontrakt signert!");
+                    this.toggleContractModal();
+                })
+                .catch(err => {
+                    console.error("Feil ved signering:", err);
+                    alert("Det oppstod en feil. Sjekk konsollen.");
+                });
         },
         startSignature() {
             this.showSignaturePad = true;
