@@ -11,9 +11,8 @@
         <main class="main-content">
             <div v-if="selectedUser && selectedProject">
                 <h2>Project: {{ selectedProject.name }}</h2>
-                <p>Upload videos/images/logs/contracts here.</p>
-                <button>Flag Project</button>
-                <button>Flag Video</button>
+                <button>Project viewer</button>
+                <button>Upload Tools</button>
             </div>
             <div v-else>
                 <p>Please select a user and a project to view details.</p>
