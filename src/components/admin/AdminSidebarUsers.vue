@@ -1,21 +1,18 @@
-<script setup>
-import { tokenStore } from '@/stores/tokenStore';
-import axios from 'axios';
-</script>
-
-
 <template>
     <h2>Users</h2>
     <ul class="user-list">
         <li v-for="user in users" :key="user.id" :class="{ active: user.id === selectedUserId }"
-            @click="selectUser(user)">
-            {{ user.username }}
+            @click="selectUser(user)" class="user-item">
+            <span>{{ user.username }}</span>
+            <span class="delete-icon" @click.stop="deleteUser(user.id)">🗑️</span>
         </li>
-
     </ul>
 </template>
 
+
 <script>
+import { tokenStore } from '@/stores/tokenStore'
+import axios from 'axios'
 
 export default {
     data() {
@@ -28,19 +25,31 @@ export default {
         selectUser(user) {
             this.selectedUserId = user.id
             this.$emit('selectedUser', user)
+        },
+        deleteUser(id) {
+            const confirmDelete = confirm("Are you sure you want to delete this user?")
+            if (!confirmDelete) return
+
+            axios.delete(`${import.meta.env.VITE_BACKEND_URL}/user/delete/${id}`, tokenStore().headers)
+                .then(() => {
+                    this.users = this.users.filter(user => user.id !== id)
+                })
+                .catch(err => {
+                    console.error("Delete error:", err.response?.data || err.message)
+                    alert("Failed to delete user.")
+                })
         }
     },
     mounted() {
         axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/`, tokenStore().headers)
             .then(response => {
-                this.users = response.data.filter(user => user.username !== 'admin');
+                this.users = response.data.filter(user => user.username !== 'admin')
             })
-            .catch(error => console.log(error.response.data));
+            .catch(error => console.log(error.response.data))
     }
 }
-
-
 </script>
+
 
 <style scoped>
 h2 {
@@ -76,5 +85,24 @@ li:hover {
 li.active {
     background-color: #3BA9FF;
     color: #000;
+}
+
+.user-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+}
+
+.delete-icon {
+    display: none;
+    margin-left: 1rem;
+    cursor: pointer;
+    color: #ff4d4f;
+    font-size: 1rem;
+}
+
+.user-item:hover .delete-icon {
+    display: inline;
 }
 </style>
