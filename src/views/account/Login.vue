@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <h1>Log In</h1>
+        <h1>Logg Inn</h1>
 
         <form @submit.prevent="onSubmit">
 
@@ -13,7 +13,7 @@
             <label for="password">Password</label>
 
             <div id="bottom">
-                <p>Dont have an account? <span id="register" @click="register">Register here</span></p>
+                <!-- <p>Dont have an account? <span id="register" @click="register">Register here</span></p> -->
                 <button>Submit</button>
             </div>
 
@@ -90,7 +90,7 @@ h1 {
 form {
     display: flex;
     flex-direction: column;
-    height: 20rem;
+    height: 17rem;
     align-items: center;
     position: relative;
 }
