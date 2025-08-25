@@ -13,7 +13,7 @@
             <video src="../assets/video.mov" muted autoplay loop>
                 Kunne ikke laste episk video 😔
             </video>
-            <section id="services">
+            <section id="services" v-fade>
                 <h1>Våre tjenester</h1>
                 <ul>
                     <li>
@@ -65,7 +65,7 @@
 
                 </p>
             </section>
-            <section id="team">
+            <section id="team" v-fade>
                 <h1>Teamet</h1>
                 <ul>
                     <li>
@@ -90,7 +90,7 @@
                     </li>
                 </ul>
             </section>
-            <section id="contact">
+            <section id="contact" v-fade>
                 <div>
                     <hr>
                     <p>
@@ -157,7 +157,17 @@
 
 </template>
 
+<script>
 
+import fade from '@/directives/fade';
+
+export default {
+    directives: {
+        fade
+    }
+}
+
+</script>
 
 <style scoped>
 #static {
@@ -447,5 +457,22 @@
     & img {
         height: 4rem;
     }
+}
+
+.before-fade {
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.fade-in {
+    opacity: 1;
+    transform: translateY(0);
+    transition: all 0.8s ease-out;
+}
+
+.fade-out {
+    opacity: 0.3;
+    transform: translateY(20px);
+    transition: all 0.8s ease-out;
 }
 </style>
