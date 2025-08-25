@@ -1,7 +1,16 @@
 <template>
 
     <div id="static">
-        <main>
+        <div class="video-container">
+            <div v-if="!videoLoaded" class="video-loader">
+                <div class="spinner"></div>
+                <p>Laster video...</p>
+            </div>
+
+            <video src="../assets/video.mov" muted autoplay loop playsinline @loadeddata="videoLoaded = true"
+                :class="{ 'fade-in': videoLoaded }">
+                Kunne ikke laste video 😔
+            </video>
 
             <div>
                 <div class="site-logo">
@@ -9,18 +18,9 @@
                     <h2>VELOCITY MEDIA</h2>
                 </div>
             </div>
+        </div>
 
-            <div class="video-container">
-                <div v-if="!videoLoaded" class="video-loader">
-                    <div class="spinner"></div>
-                    <p>Laster video...</p>
-                </div>
-
-                <video src="../assets/video.mov" muted autoplay loop playsinline @loadeddata="videoLoaded = true"
-                    :class="{ 'fade-in': videoLoaded }">
-                    Kunne ikke laste video 😔
-                </video>
-            </div>
+        <main>
 
             <section id="services" v-fade>
                 <h1>Våre tjenester</h1>
@@ -544,8 +544,18 @@ video {
 .video-container {
     position: relative;
     width: 100%;
-    height: 32rem;
+    height: 100vh;
     overflow: hidden;
+}
+
+.video-container video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
 }
 
 .video-loader {
@@ -559,6 +569,27 @@ video {
     z-index: 10;
     color: #3aaaff;
     font-weight: 600;
+}
+
+.site-logo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 2;
+    color: white;
+}
+
+.site-logo img {
+    height: 6rem;
+    margin-bottom: 1rem;
+}
+
+.site-logo h2 {
+    font-size: 3rem;
+    font-weight: 900;
+    text-transform: uppercase;
 }
 
 .spinner {
@@ -578,6 +609,9 @@ video {
 }
 
 video {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
