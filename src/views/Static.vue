@@ -19,7 +19,7 @@
                     <li>
                         <figure>
                             <img src="../assets/aftermovie.svg" alt="Aftermovie ikon">
-                            <figcaption>Film Production</figcaption>
+                            <figcaption>Film Produksjon</figcaption>
                         </figure>
                     </li>
                     <li>
@@ -38,14 +38,14 @@
                     <li>
                         <figure>
                             <img src="../assets/camera.svg" alt="Kamera ikon">
-                            <figcaption>Flerkamera-<br>produksjon</figcaption>
+                            <figcaption>Flerkamera-<br>Produksjon</figcaption>
                         </figure>
                     </li>
 
                     <li>
                         <figure>
                             <img src="../assets/grade.svg" alt="Farge gradering ikon">
-                            <figcaption>Color grading</figcaption>
+                            <figcaption>Fargegradering</figcaption>
                         </figure>
                     </li>
                 </ul>
@@ -167,7 +167,7 @@
 
 
     & * {
-        font-family: Helvetica, sans-serif;
+        /*font-family: Helvetica, sans-serif;*/
         line-height: 1.5em;
         color: #ffffff;
         margin: 0;
@@ -316,7 +316,7 @@
                             min-width: 0;
 
                             &::placeholder {
-                                font-family: Helvetica, sans-serif;
+                                /* font-family: Helvetica, sans-serif; */
                                 color: #555555;
                                 font-weight: 700;
                             }
@@ -424,7 +424,8 @@
 
 }
 
-#services { & p {
+#services {
+    & p {
         margin: 0 auto;
         width: 50rem;
         font-size: 1.2rem;

@@ -1,4 +1,25 @@
 
+  @font-face {
+  font-family: 'SuperDream';
+  src: url('@/assets/fonts/SuperDream.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+  @font-face {
+  font-family: 'HomeVideo';
+  src: url('@/assets/fonts/HomeVideo.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+  @font-face {
+  font-family: 'HomeVideoBold';
+  src: url('@/assets/fonts/HomeVideoBold.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 body {
     margin: 0;
     background-color: #000;
@@ -15,7 +36,11 @@ body {
   position: relative;
   min-height: 100vh;
   overflow: visible;
+
+  font-family: 'HomeVideo', sans-serif;
   }
+
+
 
 .background{
   position: fixed;
