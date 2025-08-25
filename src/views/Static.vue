@@ -185,6 +185,10 @@ export default {
 </script>
 
 <style scoped>
+video {
+    box-shadow: 12px 12px 2px 1px rgb(0 0 0 / 0.4);
+}
+
 #static {
     display: inline;
     text-align: left;
