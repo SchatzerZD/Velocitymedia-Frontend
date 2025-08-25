@@ -64,6 +64,9 @@
 
 
                 </p>
+                <button class="scroll-arrow" @click="scrollToNext('team')">
+                    ↓
+                </button>
             </section>
             <section id="team" v-fade>
                 <h1>Teamet</h1>
@@ -89,6 +92,9 @@
                         </figure>
                     </li>
                 </ul>
+                <button class="scroll-arrow" @click="scrollToNext('contact')">
+                    ↓
+                </button>
             </section>
             <section id="contact" v-fade>
                 <div>
@@ -164,6 +170,15 @@ import fade from '@/directives/fade';
 export default {
     directives: {
         fade
+    },
+    methods: {
+        scrollToNext(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                const y = el.getBoundingClientRect().top + window.scrollY + 150;
+                window.scrollTo({ top: y, behavior: "smooth" });
+            }
+        }
     }
 }
 
@@ -222,17 +237,17 @@ export default {
     & main {
         max-width: 64rem;
         margin: 0 auto;
-        margin-top: 5rem;
+        margin-top: 2rem;
         padding: 0 1rem;
         display: flex;
         flex-direction: column;
-        gap: 4rem;
+        gap: 1rem;
 
         &>section {
             display: flex;
             flex-flow: column;
-            gap: 4rem;
-            padding: 4rem 0;
+            gap: 3rem;
+            padding: 15rem 0;
 
             & h1 {
                 text-transform: uppercase;
@@ -474,5 +489,37 @@ export default {
     opacity: 0.3;
     transform: translateY(20px);
     transition: all 0.8s ease-out;
+}
+
+.scroll-arrow {
+    position: absolute;
+    bottom: 9rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 2rem;
+    background: none;
+    border: none;
+    color: #3aaaff;
+    cursor: pointer;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+        transform: translate(-50%, 0);
+    }
+
+    40% {
+        transform: translate(-50%, -10px);
+    }
+
+    60% {
+        transform: translate(-50%, -5px);
+    }
 }
 </style>

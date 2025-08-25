@@ -13,7 +13,7 @@ export default {
           el.classList.add("fade-out");
         }
       },
-      { threshold: 0.65 }
+      { threshold: 0.6 }
     );
 
     observer.observe(el);
