@@ -50,7 +50,7 @@ export default {
     align-items: center;
     box-shadow: 0 0 30px rgba(0, 123, 255, 0.3);
     border: 2px solid #007bff;
-    font-family: 'Arial', sans-serif;
+    /* font-family: 'Arial', sans-serif; */
 }
 
 .modal.black {

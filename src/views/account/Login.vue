@@ -102,7 +102,7 @@ label {
     font-weight: 600;
     letter-spacing: 0.5px;
     color: #061524;
-    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    /* font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; */
     transition: color 0.3s ease;
 }
 
@@ -118,7 +118,7 @@ input[type="password"] {
     border-bottom: 2px solid #ccc;
     border-radius: 0;
     font-size: 16px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    /* font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; */
     transition: all 0.3s ease;
     background-color: transparent;
     box-shadow: none;
@@ -160,6 +160,7 @@ button {
     height: 2rem;
     border-radius: 6px;
     transition: all 0.3s ease;
+    font-family: 'HomeVideo', sans-serif;
 }
 
 button:hover {

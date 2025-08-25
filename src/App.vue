@@ -194,7 +194,7 @@ nav a:hover {
 
 
   & h2 {
-    padding-top: 0.4rem;
+    padding-top: 0.55rem;
   }
 }
 
