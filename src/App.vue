@@ -41,7 +41,7 @@ import Static from './views/Static.vue';
           </template>
 
           <template v-else>
-            <RouterLink :to="{ name: 'Admin' }">Admin Tools</RouterLink>
+            <RouterLink :to="{ name: 'Admin' }" @click="flowPage">Admin Tools</RouterLink>
             <RouterLink to="" @click="logOut">Logg ut</RouterLink>
           </template>
         </div>
