@@ -10,9 +10,18 @@
                 </div>
             </div>
 
-            <video src="../assets/video.mov" muted autoplay loop>
-                Kunne ikke laste episk video 😔
-            </video>
+            <div class="video-container">
+                <div v-if="!videoLoaded" class="video-loader">
+                    <div class="spinner"></div>
+                    <p>Laster video...</p>
+                </div>
+
+                <video src="../assets/video.mov" muted autoplay loop playsinline @loadeddata="videoLoaded = true"
+                    :class="{ 'fade-in': videoLoaded }">
+                    Kunne ikke laste video 😔
+                </video>
+            </div>
+
             <section id="services" v-fade>
                 <h1>Våre tjenester</h1>
                 <ul>
@@ -168,6 +177,11 @@
 import fade from '@/directives/fade';
 
 export default {
+    data() {
+        return {
+            videoLoaded: false
+        };
+    },
     directives: {
         fade
     },
@@ -525,5 +539,53 @@ video {
     60% {
         transform: translate(-50%, -5px);
     }
+}
+
+.video-container {
+    position: relative;
+    width: 100%;
+    height: 32rem;
+    overflow: hidden;
+}
+
+.video-loader {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #000;
+    z-index: 10;
+    color: #3aaaff;
+    font-weight: 600;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(255, 255, 255, 0.2);
+    border-top-color: #3aaaff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 1s ease;
+}
+
+video[loaded] {
+    opacity: 1;
 }
 </style>
