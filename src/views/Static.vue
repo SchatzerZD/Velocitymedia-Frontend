@@ -2,13 +2,24 @@
 
     <div id="static">
         <main>
+
+            <div>
+                <div class="site-logo">
+                    <img src="../assets/logo.svg" alt="Velocity Media logo" class="logo">
+                    <h2>VELOCITY MEDIA</h2>
+                </div>
+            </div>
+
+            <video src="../assets/video.mov" muted autoplay loop>
+                Kunne ikke laste episk video 😔
+            </video>
             <section id="services">
                 <h1>Våre tjenester</h1>
                 <ul>
                     <li>
                         <figure>
                             <img src="../assets/aftermovie.svg" alt="Aftermovie ikon">
-                            <figcaption>Film/Video Production</figcaption>
+                            <figcaption>Film Production</figcaption>
                         </figure>
                     </li>
                     <li>
@@ -39,14 +50,18 @@
                     </li>
                 </ul>
                 <p>
-                    <strong>VELOCITY MEDIA er din partner for profesjonelt visuelt innhold.</strong><br></br> Vi
-                    spesialiserer
-                    oss på høykvalitets film- og fotoopptak fra luft, vei og bakkenivå – enten det er med drone, kamera,
-                    kjøretøymontert rigg eller håndholdte løsninger.
+                    <strong>VELOCITY MEDIA er din partner for profesjonelt visuelt innhold.</strong>
+                    <br><br>
+                    Vi spesialiserer oss på høykvalitets film- og fotoopptak fra luft, vann, og bakkenivå! Enten det er
+                    med drone, kamera, kjøretøymontert rigg eller håndholdte løsninger, hjelper vi deg med det du
+                    trenger!
+                    <br><br>
                     Vi fanger øyeblikkene som virkelig teller – fra actionfylte motorsportscener og spektakulære
                     arrangementer til skreddersydde reklameproduksjoner.
-                    Med fokus på fart, presisjon og kreativitet leverer vi visuelt innhold som engasjerer, inspirerer og
-                    imponerer.
+                    <br><br>
+                    Med fokus på presisjon, spenning og kreativitet leverer vi visuelt innhold som engasjerer,
+                    inspirerer og imponerer.
+
 
                 </p>
             </section>
@@ -143,6 +158,7 @@
 </template>
 
 
+
 <style scoped>
 #static {
     display: inline;
@@ -196,6 +212,7 @@
     & main {
         max-width: 64rem;
         margin: 0 auto;
+        margin-top: 5rem;
         padding: 0 1rem;
         display: flex;
         flex-direction: column;
@@ -227,7 +244,6 @@
 
             & strong {
                 color: #51A2DE;
-                text-transform: uppercase;
                 font-weight: 900;
             }
 
@@ -406,5 +422,29 @@
         }
     }
 
+}
+
+#services { & p {
+        margin: 0 auto;
+        width: 50rem;
+        font-size: 1.2rem;
+    }
+
+}
+
+.site-logo {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+    gap: 1rem;
+
+    & h2 {
+        font-size: 3rem;
+    }
+
+    & img {
+        height: 4rem;
+    }
 }
 </style>
