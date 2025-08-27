@@ -9,11 +9,7 @@ import Static from './views/Static.vue';
 
 <template>
   <div class="background">
-    <div class="bubble"></div>
-    <div class="bubble"></div>
-    <div class="bubble"></div>
-    <div class="bubble"></div>
-    <div class="bubble"></div>
+
   </div>
 
   <header v-if="$route.name !== 'NotFound'">

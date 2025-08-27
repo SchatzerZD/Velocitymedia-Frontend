@@ -12,12 +12,6 @@
                 Kunne ikke laste video 😔
             </video>
 
-            <div>
-                <div class="site-logo">
-                    <img src="../assets/logo.svg" alt="Velocity Media logo" class="logo">
-                    <h2>VELOCITY MEDIA</h2>
-                </div>
-            </div>
         </div>
 
         <main>
@@ -80,24 +74,21 @@
             <section id="team" v-fade>
                 <h1>Teamet</h1>
                 <ul>
+
                     <li>
                         <figure>
-                            <img src="../assets/placeholder.svg" alt="Profilbilde">
+                            <img src="../assets/portraits/Tinius.jpeg" alt="Profilbilde">
                         </figure>
                     </li>
                     <li>
                         <figure>
-                            <img src="../assets/placeholder.svg" alt="Profilbilde">
+                            <img src="../assets/portraits/Portraits_Filip.jpg" alt="Profilbilde">
                         </figure>
                     </li>
+
                     <li>
                         <figure>
-                            <img src="../assets/placeholder.svg" alt="Profilbilde">
-                        </figure>
-                    </li>
-                    <li>
-                        <figure>
-                            <img src="../assets/placeholder.svg" alt="Profilbilde">
+                            <img src="../assets/portraits/Portraits_Orfeas.jpg" alt="Profilbilde">
                         </figure>
                     </li>
                 </ul>
@@ -313,15 +304,22 @@ video {
                 }
 
                 &>ul {
-                    display: grid;
-                    grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
-                    gap: 2rem;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                    /* grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); */
+                    gap: 1rem;
 
                     &>li {
                         &>figure {
                             &>img {}
                         }
                     }
+                }
+
+                & img {
+                    width: auto;
+                    height: 18rem;
                 }
             }
 

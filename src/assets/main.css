@@ -48,6 +48,20 @@
   font-style: normal;
 }
 
+  @font-face {
+  font-family: 'Nexa-ExtraLight';
+  src: url('@/assets/fonts/Nexa-ExtraLight.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+  @font-face {
+  font-family: 'Nexa-Heavy';
+  src: url('@/assets/fonts/Nexa-Heavy.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 body {
     margin: 0;
     background-color: #000;
@@ -58,7 +72,7 @@ body {
   min-height: 100vh;
   overflow: visible;
 
-  font-family: 'HomeVideo', sans-serif;
+  font-family: 'Nexa-Heavy', sans-serif;
   }
 
 
@@ -72,7 +86,7 @@ body {
   z-index: -100;
 
   background-image: 
-    linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(21, 36, 85, 0.5)), 
+    /* linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(21, 36, 85, 0.5)),  */
     url("background.svg");
   background-repeat: no-repeat;
   background-size: cover;
