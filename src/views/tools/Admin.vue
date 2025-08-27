@@ -1,6 +1,8 @@
 <script setup>
 import axios from 'axios';
 import { tokenStore } from '@/stores/tokenStore';
+import Modal from '@/components/Modal.vue';
+import SignUp from '../account/SignUp.vue';
 </script>
 
 <template>
@@ -15,6 +17,8 @@ import { tokenStore } from '@/stores/tokenStore';
 
 
         <h1>Admin Panel</h1>
+
+        <button @click="toggleModal">Legg til bruker</button>
 
         <div class="select-wrapper">
             <label for="user-select">Velg Bruker:</label>
@@ -133,6 +137,11 @@ import { tokenStore } from '@/stores/tokenStore';
 
 
     </div>
+
+
+    <Modal v-if="showModal" @closeModal="toggleModal">
+        <SignUp @login="toggleRegister"></SignUp>
+    </Modal>
 </template>
 
 
@@ -162,11 +171,18 @@ export default {
             invoiceDraftUrl: null,
             showInvoiceForm: false,
 
-
+            showModal: false
 
         };
     },
     methods: {
+        toggleModal() {
+            this.register = false
+            this.showModal = !this.showModal
+        },
+        toggleRegister() {
+            this.register = !this.register
+        },
         async fetchUserProjects() {
             this.selectedProjectId = null;
             this.userProjects = [];

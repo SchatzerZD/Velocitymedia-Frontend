@@ -1,7 +1,7 @@
 <template>
 
     <div class="container">
-        <h1>Sign Up</h1>
+        <h1>Add User</h1>
 
         <form @submit.prevent="onSubmit">
 
@@ -14,16 +14,14 @@
             <label for="password">Password</label>
 
             <div id="bottom">
-                <p>Already have an account? <span id="register" @click="login">Log in here</span></p>
+
                 <button>Submit</button>
             </div>
 
         </form>
-
+        <p>{{ response }}</p>
         <div v-if="error" id="error">{{ error }}</div>
-
     </div>
-
 </template>
 
 
@@ -37,7 +35,8 @@ export default {
         return {
             user: {
                 username: "",
-                password: ""
+                password: "",
+                response: ""
             },
 
             error: ""
@@ -47,26 +46,17 @@ export default {
     methods: {
         async onSubmit() {
             await axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/`, this.user)
-                .then(response => this.register(response.data))
+                .then(response => {
+
+                    console.log(response.data)
+                    this.response = "User Added"
+                })
                 .catch(error => {
                     this.error = error.response.data
+                    this.response = "Error"
                 })
-        },
-        register(jwt) {
-            console.log("login successful")
-            tokenStore().changeJWT(jwt)
-            tokenStore().changeUsername(this.user.username)
-            tokenStore().changeAccountId("")
-            tokenStore().changeInvoiceId("")
-            window.location.replace(window.location.origin + "/");
-
-        },
-        login() {
-            this.$emit("login")
         }
     }
-
-
 }
 
 </script>
