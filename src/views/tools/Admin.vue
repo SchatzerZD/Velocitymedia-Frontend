@@ -39,7 +39,7 @@ import SignUp from '../account/SignUp.vue';
                 </option>
             </select>
         </div>
-        <div v-else-if="selectedUser">
+        <div v-if="selectedUser">
             <button @click="newProject = true;">Legg til prosjekt</button>
         </div>
 
