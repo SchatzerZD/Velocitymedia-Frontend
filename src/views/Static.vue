@@ -79,18 +79,50 @@
                         <figure>
                             <img src="../assets/portraits/Tinius.jpeg" alt="Profilbilde">
                             <p><strong>CEO</strong> - William Tinius Marheim Jensen</p>
+                            <div class="text-container">
+                                <p class="portrait-text">Ingenting annet enn ambisiøs!
+                                    Med en ekte lidenskap for teknologi og et skarpt blikk for design leder Tinius
+                                    Velocity
+                                    Media og våre kunder i riktig retning. Med over 7 års erfaring besitter Tinius bred
+                                    kunnskap innenfor kameraarbeid, multicam-produksjoner, droneflyving, redigering og
+                                    mer.
+                                    Hans tekniske ekspertise, kombinert med store mål, driver både innovasjon og vekst.
+                                </p>
+                            </div>
+
                         </figure>
                     </li>
                     <li>
                         <figure>
                             <img src="../assets/portraits/Portraits_Filip.jpg" alt="Profilbilde">
                             <p><strong>CFO</strong> - Filip Jonatan Borowski Berg</p>
+                            <div class="text-container">
+                                <p class="portrait-text">En kreativ arbeidshest!
+                                    Filip er en utrettelig kreativ skaper som alltid søker de mest originale og kreative
+                                    løsningene. Med solid kompetanse innen kameraarbeid, fotografi og konseptutvikling,
+                                    bringer han ideer til livet. Filip har bred erfaring fra film, TV og reklame på
+                                    høyeste
+                                    nivå i Norge, og han tilfører både ekspertise og kompromissløs kvalitet til enhver
+                                    produksjon.
+                                </p>
+                            </div>
+
                         </figure>
                     </li>
                     <li>
                         <figure>
                             <img src="../assets/portraits/Portraits_Orfeas.jpg" alt="Profilbilde">
                             <p><strong>COO</strong> - Orfeas Orestis Madentzoglou</p>
+                            <div class="text-container">
+                                <p class="portrait-text">En ekte kunstner!
+                                    Mens han jakter etter de vakre øyeblikk, skaper Orfeas mening bilde for bilde i
+                                    hvert
+                                    prosjekt. Med solid bakgrunn fra dokumentarer og som en mester på lyssetting, sørger
+                                    Orfeas for at hvert sluttprodukt ikke bare oppfyller kundens visjon, men også
+                                    etterlater
+                                    et varig og beundringsverdig inntrykk.</p>
+                            </div>
+
                         </figure>
                     </li>
                 </ul>
@@ -328,6 +360,16 @@ video {
                 & p {
                     padding-top: 1rem;
                     text-align: center;
+                }
+
+                & .portrait-text {
+                    text-align: left;
+                    width: 288px;
+                    margin: 0 auto;
+                }
+
+                & .text-container {
+                    margin: auto 0;
                 }
             }
 
