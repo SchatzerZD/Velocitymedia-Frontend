@@ -136,7 +136,7 @@ export default {
 <style scoped>
 header {
   background-color: #000;
-  padding: 0.5rem 2rem;
+  padding: 1rem 2rem;
   display: flex;
   justify-content: space-between;
 

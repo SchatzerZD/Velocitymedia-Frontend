@@ -161,27 +161,50 @@
                         <button type="submit" name="send">Send</button>
                     </form>
                 </div>
+                <button class="scroll-arrow" @click="scrollToNext('customers')">
+                    ↓
+                </button>
             </section>
-            <!-- <section id="customers">
-        <h1>Disse tar av med <strong>Velocity Media</strong></h1>
-        <ul>
-            <li>
-                <figure>
-                    <img src="assets/dot.svg" alt="">
-                </figure>
-            </li>
-            <li>
-                <figure>
-                    <img src="assets/dot.svg" alt="">
-                </figure>
-            </li>
-            <li>
-                <figure>
-                    <img src="assets/dot.svg" alt="">
-                </figure>
-            </li>
-        </ul>
-    </section> -->
+            <section id="customers">
+                <h1>JOBBER MED</h1>
+                <ul>
+                    <li>
+                        <figure>
+                            <img src="../assets/customer_logos/Red-Bull-logo.png" alt="">
+                        </figure>
+                    </li>
+                    <li>
+                        <figure>
+                            <img src="../assets/customer_logos/birraperoni.png" alt="">
+                        </figure>
+                    </li>
+                    <li>
+                        <figure>
+                            <img src="../assets/customer_logos/charliearoennez.png" alt="">
+                        </figure>
+                    </li>
+                    <li>
+                        <figure>
+                            <img src="../assets/customer_logos/gs.png" alt="">
+                        </figure>
+                    </li>
+                    <li>
+                        <figure>
+                            <img src="../assets/customer_logos/lga.png" alt="">
+                        </figure>
+                    </li>
+                    <li>
+                        <figure>
+                            <img src="../assets/customer_logos/palmesus.png" alt="">
+                        </figure>
+                    </li>
+                    <li>
+                        <figure>
+                            <img src="../assets/customer_logos/tonsofrock.png" alt="">
+                        </figure>
+                    </li>
+                </ul>
+            </section>
         </main>
         <footer>
             <nav>
@@ -475,13 +498,13 @@ video {
 
                 &>ul {
                     display: grid;
-                    grid-template-columns: repeat(auto-fit, minmax(min(100%, 8rem), 1fr));
-                    gap: 2rem;
+                    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+                    gap: 3rem;
 
                     &>li {
                         &>figure {
                             &>img {
-                                height: 4rem;
+                                height: 7rem;
                             }
                         }
                     }
