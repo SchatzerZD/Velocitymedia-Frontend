@@ -7,7 +7,7 @@
                 <p>Laster video...</p>
             </div>
 
-            <video src="../assets/video.mov" muted autoplay loop playsinline @loadeddata="videoLoaded = true"
+            <video src="../assets/video.mp4" muted autoplay loop playsinline @loadeddata="videoLoaded = true"
                 :class="{ 'fade-in': videoLoaded }">
                 Kunne ikke laste video 😔
             </video>
@@ -22,7 +22,7 @@
                     <li>
                         <figure>
                             <img src="../assets/aftermovie.svg" alt="Aftermovie ikon">
-                            <figcaption>Film Produksjon</figcaption>
+                            <figcaption>Filmproduksjon</figcaption>
                         </figure>
                     </li>
                     <li>
@@ -78,17 +78,19 @@
                     <li>
                         <figure>
                             <img src="../assets/portraits/Tinius.jpeg" alt="Profilbilde">
+                            <p><strong>CEO</strong> - William Tinius Marheim Jensen</p>
                         </figure>
                     </li>
                     <li>
                         <figure>
                             <img src="../assets/portraits/Portraits_Filip.jpg" alt="Profilbilde">
+                            <p><strong>CFO</strong> - Filip Jonatan Borowski Berg</p>
                         </figure>
                     </li>
-
                     <li>
                         <figure>
                             <img src="../assets/portraits/Portraits_Orfeas.jpg" alt="Profilbilde">
+                            <p><strong>COO</strong> - Orfeas Orestis Madentzoglou</p>
                         </figure>
                     </li>
                 </ul>
@@ -183,6 +185,7 @@ export default {
                 const y = el.getBoundingClientRect().top + window.scrollY + 150;
                 window.scrollTo({ top: y, behavior: "smooth" });
             }
+
         }
     }
 }
@@ -320,6 +323,11 @@ video {
                 & img {
                     width: auto;
                     height: 18rem;
+                }
+
+                & p {
+                    padding-top: 1rem;
+                    text-align: center;
                 }
             }
 
