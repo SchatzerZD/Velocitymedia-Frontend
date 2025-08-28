@@ -28,7 +28,7 @@ import { ArrowLeftIcon } from '@heroicons/vue/24/solid'
                 <li class="comment-item" v-for="comment in comments" :key="comment.id"
                     @click="goToTimestamp(comment.timestampInSeconds)">
                     <div class="comment-body">
-                        <span class="username">{{ comment.timestampInSeconds }}</span>
+                        <span class="username">{{ comment.timestampInSeconds.slice(0, 3) }}</span>
                         <p class="comment-text">{{ comment.comment }}</p>
                     </div>
                 </li>
@@ -46,7 +46,7 @@ import { ArrowLeftIcon } from '@heroicons/vue/24/solid'
         <a :href="videoUrl + videoName" :download="videoName" class="download-link">
             <ArrowDownTrayIcon class="upload-icon" />
         </a>
-        <h3>{{ videoName }}</h3>
+        <h3>{{ videoName.slice(0, -18) }}</h3>
     </div>
 
 </template>
