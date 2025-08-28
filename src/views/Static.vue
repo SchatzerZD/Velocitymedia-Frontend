@@ -78,9 +78,13 @@
                     <li>
                         <figure>
                             <img src="../assets/portraits/Tinius.jpeg" alt="Profilbilde">
-                            <p><strong>CEO</strong> - William Tinius Marheim Jensen</p>
+                            <p><strong>CEO</strong> <br></br>William Tinius Marheim Jensen</p>
+                            <div class="text-italic">
+                                <p><i>Ingenting annet enn ambisiøs!</i></p>
+                            </div>
+
                             <div class="text-container">
-                                <p class="portrait-text">Ingenting annet enn ambisiøs!
+                                <p class="portrait-text">
                                     Med en ekte lidenskap for teknologi og et skarpt blikk for design leder Tinius
                                     Velocity
                                     Media og våre kunder i riktig retning. Med over 7 års erfaring besitter Tinius bred
@@ -95,9 +99,13 @@
                     <li>
                         <figure>
                             <img src="../assets/portraits/Portraits_Filip.jpg" alt="Profilbilde">
-                            <p><strong>CFO</strong> - Filip Jonatan Borowski Berg</p>
+                            <p><strong>Kreativ leder & Regissør</strong> <br></br>Filip Jonatan Borowski Berg</p>
+                            <div class="text-italic">
+                                <p><i>En kreativ arbeidshest!</i></p>
+                            </div>
+
                             <div class="text-container">
-                                <p class="portrait-text">En kreativ arbeidshest!
+                                <p class="portrait-text">
                                     Filip er en utrettelig kreativ skaper som alltid søker de mest originale og kreative
                                     løsningene. Med solid kompetanse innen kameraarbeid, fotografi og konseptutvikling,
                                     bringer han ideer til livet. Filip har bred erfaring fra film, TV og reklame på
@@ -112,9 +120,12 @@
                     <li>
                         <figure>
                             <img src="../assets/portraits/Portraits_Orfeas.jpg" alt="Profilbilde">
-                            <p><strong>COO</strong> - Orfeas Orestis Madentzoglou</p>
+                            <p><strong>Kreativ leder & DOP</strong> <br></br>Orfeas Orestis Madentzoglou</p>
+                            <div class="text-italic">
+                                <p><i>En ekte kunstner!</i></p>
+                            </div>
                             <div class="text-container">
-                                <p class="portrait-text">En ekte kunstner!
+                                <p class="portrait-text">
                                     Mens han jakter etter de vakre øyeblikk, skaper Orfeas mening bilde for bilde i
                                     hvert
                                     prosjekt. Med solid bakgrunn fra dokumentarer og som en mester på lyssetting, sørger
@@ -346,9 +357,7 @@ video {
                     gap: 1rem;
 
                     &>li {
-                        &>figure {
-                            &>img {}
-                        }
+                        &>figure {}
                     }
                 }
 
@@ -362,14 +371,22 @@ video {
                     text-align: center;
                 }
 
+
+
+
                 & .portrait-text {
                     text-align: left;
                     width: 288px;
                     margin: 0 auto;
                 }
 
+                & i {
+                    margin: 0 auto;
+                    font-family: Nexa-ExtraLight;
+                }
+
                 & .text-container {
-                    margin: auto 0;
+                    margin: 0 auto;
                 }
             }
 
