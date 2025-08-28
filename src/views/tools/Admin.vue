@@ -669,7 +669,7 @@ select:focus {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
-    width: 10%;
+    width: 13%;
     margin: 0 auto;
     margin-bottom: 1.5rem;
     text-align: left;
