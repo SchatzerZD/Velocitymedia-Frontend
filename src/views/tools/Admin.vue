@@ -39,6 +39,9 @@ import SignUp from '../account/SignUp.vue';
                 </option>
             </select>
         </div>
+        <div v-else-if="selectedUser">
+            <button @click="newProject = true;">Legg til prosjekt</button>
+        </div>
 
         <div class="tab-container">
             <div class="tab-buttons">
@@ -142,6 +145,19 @@ import SignUp from '../account/SignUp.vue';
     <Modal v-if="showModal" @closeModal="toggleModal">
         <SignUp @login="toggleRegister"></SignUp>
     </Modal>
+
+    <Modal v-if="newProject" @closeModal="newProject = false;">
+        <div class="new-project-container">
+            <h2>Opprett nytt prosjekt</h2>
+            <form @submit.prevent="createNewProject">
+                <label>Prosjekt Navn</label>
+                <input type="text" v-model="newProjectName" required>
+
+                <button type="submit">Oprett prosjekt</button>
+            </form>
+        </div>
+
+    </Modal>
 </template>
 
 
@@ -170,6 +186,8 @@ export default {
 
             invoiceDraftUrl: null,
             showInvoiceForm: false,
+            newProject: false,
+            newProjectName: '',
 
             showModal: false
 
@@ -184,6 +202,8 @@ export default {
             this.register = !this.register
         },
         async fetchUserProjects() {
+            console.log(this.selectedUser)
+
             this.selectedProjectId = null;
             this.userProjects = [];
 
@@ -390,6 +410,19 @@ export default {
                 alert("Feil ved oppretting av fakturautkast");
             }
         },
+        async createNewProject() {
+            await axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/projects/admin/${this.selectedUser}`, {
+
+                name: this.newProjectName
+            },
+                tokenStore().headers)
+                .then(response => {
+                    console.log(response)
+                    this.newProject = false;
+                    this.fetchUserProjects();
+                })
+                .catch(error => console.log(error))
+        }
 
     },
     mounted() {
@@ -758,5 +791,9 @@ select:focus {
     .upload-grid {
         grid-template-columns: 1fr;
     }
+}
+
+.new-project-container {
+    padding: 2rem;
 }
 </style>
