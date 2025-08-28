@@ -15,8 +15,6 @@ import InvoicePreview from '@/components/InvoicePreview.vue';
             <option v-for="project in projects" :key="project.id" :value="project.id">
                 {{ project.name }}
             </option>
-            <option disabled>────────────</option>
-            <option value="__new__">+ Opprett nytt prosjekt</option>
         </select>
     </div>
 
